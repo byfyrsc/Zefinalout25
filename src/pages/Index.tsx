@@ -1,22 +1,22 @@
 import { useTenant } from "@/contexts/TenantContext";
 import TenantSelector from "@/components/tenant/TenantSelector";
 import RestaurantSelector from "@/components/tenant/RestaurantSelector";
-import RestaurantDashboard from "@/components/restaurant/RestaurantDashboard";
 import { useAuth } from "@/contexts/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 /**
- * IndexPage serves as the main entry point after authentication.
- * It ensures that a tenant and a restaurant are selected before rendering the main dashboard.
- * If the user is not authenticated, it redirects to the login page.
+ * IndexPage serve como o ponto de entrada principal após a autenticação.
+ * Garante que um inquilino e um restaurante sejam selecionados antes de renderizar o dashboard principal.
+ * Se o usuário não estiver autenticado, redireciona para a página de login.
  */
 const IndexPage = () => {
   const { user, loading } = useAuth();
   const { currentTenant, currentRestaurant } = useTenant();
+  const location = useLocation();
 
   if (loading) {
-    // Show a loading spinner while checking auth state
+    // Mostra um spinner de carregamento enquanto verifica o estado de autenticação
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <motion.div
@@ -33,11 +33,11 @@ const IndexPage = () => {
   }
 
   if (!user) {
-    // If not authenticated, redirect to the login page
+    // Se não autenticado, redireciona para a página de login
     return <Navigate to="/login" replace />;
   }
 
-  // If authenticated, proceed with tenant/restaurant selection
+  // Se autenticado, prossegue com a seleção de inquilino/restaurante
   if (!currentTenant) {
     return (
       <motion.div
@@ -62,16 +62,14 @@ const IndexPage = () => {
     );
   }
 
-  // Once tenant and restaurant are selected, show the main dashboard
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      <RestaurantDashboard />
-    </motion.div>
-  );
+  // Se o inquilino e o restaurante estiverem selecionados, e estivermos na raiz ou /dashboard,
+  // redireciona para a página de visão geral padrão do restaurante.
+  if (currentTenant && currentRestaurant && (location.pathname === '/' || location.pathname === '/dashboard')) {
+    return <Navigate to="/overview" replace />;
+  }
+
+  // Caso contrário, permite que o roteador renderize a página específica
+  return null;
 };
 
 export default IndexPage;
