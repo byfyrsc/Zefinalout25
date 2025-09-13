@@ -13,6 +13,7 @@ import {
   FileText,
   MessageCircle, // Re-added for communication
   Brain, // Novo ícone para AI Insights
+  Target, // Novo ícone para NPS Engine
 } from "lucide-react";
 
 export interface NavItem {
@@ -31,7 +32,8 @@ export const mainNavigationItems: NavItem[] = [
   { id: "restaurant-analytics", label: "Restaurant Analytics", icon: BarChart3, path: "/restaurant-analytics", requiresRestaurant: true },
   { id: "advanced-analytics", label: "Advanced Analytics", icon: Sparkles, path: "/advanced-analytics" },
   { id: "ai-insights", label: "AI Insights", icon: Brain, path: "/ai-insights" },
-  { id: "general-analytics", label: "General Analytics", icon: BarChart3, path: "/general-analytics" }, // Novo item de navegação
+  { id: "general-analytics", label: "General Analytics", icon: BarChart3, path: "/general-analytics" },
+  { id: "nps-engine", label: "NPS Engine", icon: Target, path: "/nps-engine" }, // Novo item de navegação
   { id: "campaigns", label: "Campaigns", icon: Gift, path: "/campaigns" },
   { id: "events", label: "Events", icon: Calendar, path: "/events" },
   { id: "gamification", label: "Gamification", icon: Users, path: "/gamification" },

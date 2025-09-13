@@ -25,7 +25,8 @@ const CommunicationPage = lazy(() => import("@/pages/CommunicationPage"));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const AIInsightsPage = lazy(() => import("@/pages/AIInsightsPage"));
-const GeneralAnalyticsPage = lazy(() => import("@/pages/GeneralAnalyticsPage")); // Nova importação
+const GeneralAnalyticsPage = lazy(() => import("@/pages/GeneralAnalyticsPage"));
+const NPSEnginePage = lazy(() => import("@/pages/NPSEnginePage")); // Nova importação
 
 
 export const protectedRoutes = [
@@ -46,7 +47,7 @@ export const protectedRoutes = [
         element: <Index />,
       },
       // Rotas específicas para visualizações relacionadas ao restaurante
-      { path: "overview", element: <RestaurantOverviewPage /> }, // Nova rota para a visão geral do dashboard refatorada
+      { path: "overview", element: <RestaurantOverviewPage /> },
       { path: "feedback", element: <RestaurantFeedbackPage /> },
       { path: "qrcode", element: <RestaurantQRCodePage /> },
       { path: "restaurant-analytics", element: <RestaurantAnalyticsPage /> },
@@ -65,7 +66,8 @@ export const protectedRoutes = [
       { path: "profile", element: <ProfilePage /> },
       { path: "accessibility", element: <AccessibilityPage /> },
       { path: "ai-insights", element: <AIInsightsPage /> },
-      { path: "general-analytics", element: <GeneralAnalyticsPage /> }, // Nova rota
+      { path: "general-analytics", element: <GeneralAnalyticsPage /> },
+      { path: "nps-engine", element: <NPSEnginePage /> }, // Nova rota
     ],
   },
 ];
