@@ -25,7 +25,7 @@ export const NPSEngine = ({ locationId, showFilters = true, showBenchmarks = tru
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
   const [selectedLocation, setSelectedLocation] = useState<string | undefined>(locationId);
   
-  const { npsMetrics, isNPSLoading, npsError } = useNPSMetrics(
+  const { npsMetrics, isNPSLoading, npsError, refetch: refetchNPSMetrics } = useNPSMetrics( // Adicionado refetch
     selectedLocation,
     dateRange.from?.toISOString(),
     dateRange.to?.toISOString()
@@ -70,7 +70,7 @@ export const NPSEngine = ({ locationId, showFilters = true, showBenchmarks = tru
           <p className="text-muted-foreground mb-4">
             Não foi possível carregar as métricas NPS. Tente novamente.
           </p>
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => refetchNPSMetrics()}> {/* Adicionado onClick para refetch */}
             <RefreshCw className="mr-2 h-4 w-4" />
             Tentar Novamente
           </Button>

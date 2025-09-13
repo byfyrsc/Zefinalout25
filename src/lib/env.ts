@@ -1,8 +1,8 @@
-
 import { z } from 'zod';
 
 const envSchema = z.object({
   VITE_USE_MOCK_AUTH: z.string().transform(val => val === 'true').optional(),
+  VITE_USE_MOCK_DATA: z.string().transform(val => val === 'true').optional(), // Nova variável
   DEV: z.boolean(),
   PROD: z.boolean(),
 });

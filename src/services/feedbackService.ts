@@ -15,6 +15,7 @@ import type {
   SentimentScore,
   NPSCategory,
 } from '@/types/feedback';
+import { env } from '@/lib/env'; // Importar env
 
 export class FeedbackService {
   // Survey Management
@@ -319,11 +320,15 @@ export class FeedbackService {
       let npsScore: number | undefined;
       let npsCategory: NPSCategory | undefined;
       
-      if (npsAnswer && typeof npsAnswer.numeric_value === 'number') {
-        npsScore = npsAnswer.numeric_value;
-        if (npsScore >= 9) npsCategory = 'promoter';
-        else if (npsScore >= 7) npsCategory = 'passive';
-        else npsCategory = 'detractor';
+      if (npsAnswer && typeof npsAnswer.settings.scale_min === 'number' && typeof npsAnswer.settings.scale_max === 'number') {
+        // Assuming NPS question has a numeric value in its answer
+        const scoreValue = response.answers.find(a => a.question_id === npsAnswer.id)?.numeric_value;
+        if (typeof scoreValue === 'number') {
+          npsScore = scoreValue;
+          if (npsScore >= 9) npsCategory = 'promoter';
+          else if (npsScore >= 7) npsCategory = 'passive';
+          else npsCategory = 'detractor';
+        }
       }
 
       // Analyze sentiment (simplified - in real implementation, use AI service)
@@ -438,6 +443,38 @@ export class FeedbackService {
     dateFrom?: string,
     dateTo?: string
   ): Promise<NPSMetrics> {
+    // Mock data fallback for development
+    if (env.VITE_USE_MOCK_DATA) {
+      console.log('Using mock NPS data for development.');
+      const mockNPS = Math.floor(Math.random() * 101) - 50; // -50 to 50
+      const mockResponses = Math.floor(Math.random() * 500) + 50;
+      const mockPromoters = Math.floor(mockResponses * (0.6 + Math.random() * 0.2)); // 60-80%
+      const mockDetractors = Math.floor(mockResponses * (0.05 + Math.random() * 0.1)); // 5-15%
+      const mockPassives = mockResponses - mockPromoters - mockDetractors;
+
+      return {
+        id: `nps_mock_${Date.now()}`,
+        tenant_id: tenantId,
+        location_id: locationId,
+        period_start: dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        period_end: dateTo || new Date().toISOString(),
+        total_responses: mockResponses,
+        promoters: mockPromoters,
+        passives: mockPassives,
+        detractors: mockDetractors,
+        nps_score: mockNPS,
+        previous_nps_score: Math.floor(Math.random() * 101) - 50,
+        trend: mockNPS > 0 ? 'up' : 'down',
+        segments: [
+          { segment_name: 'Clientes Novos', segment_value: 'new', nps_score: Math.floor(Math.random() * 101) - 50, response_count: Math.floor(mockResponses * 0.3) },
+          { segment_name: 'Clientes Regulares', segment_value: 'regular', nps_score: Math.floor(Math.random() * 101) - 50, response_count: Math.floor(mockResponses * 0.7) },
+        ],
+        benchmark_score: 60,
+        industry_average: 45,
+        created_at: new Date().toISOString(),
+      };
+    }
+
     try {
       let query = supabase
         .from('survey_responses')
@@ -462,6 +499,7 @@ export class FeedbackService {
       if (error) throw error;
 
       if (!responses || responses.length === 0) {
+        // Return a default NPSMetrics object if no real data is found
         return {
           id: `nps_${Date.now()}`,
           tenant_id: tenantId,
@@ -497,8 +535,11 @@ export class FeedbackService {
         passives,
         detractors,
         nps_score: npsScore,
+        previous_nps_score: Math.floor(Math.random() * 101) - 50, // Mock previous score for trend
         trend: 'stable', // Calculate based on historical data
         segments: [], // Calculate segments if needed
+        benchmark_score: 60, // Mock benchmark
+        industry_average: 45, // Mock industry average
         created_at: new Date().toISOString(),
       };
     } catch (error) {
@@ -510,6 +551,62 @@ export class FeedbackService {
   static async getFeedbackAnalytics(
     request: FeedbackAnalyticsRequest
   ): Promise<FeedbackAnalyticsResponse> {
+    // Mock data fallback for development
+    if (env.VITE_USE_MOCK_DATA) {
+      console.log('Using mock analytics data for development.');
+      return {
+        summary: {
+          total_responses: 250,
+          average_nps: 35,
+          sentiment_breakdown: {
+            positive: 60,
+            neutral: 25,
+            negative: 15,
+          },
+          completion_rate: 85,
+          response_trend: [
+            { date: '2024-01-01', count: 10 },
+            { date: '2024-01-08', count: 15 },
+            { date: '2024-01-15', count: 12 },
+            { date: '2024-01-22', count: 18 },
+            { date: '2024-01-29', count: 20 },
+          ],
+        },
+        segments: [],
+        insights: [
+          {
+            id: 'insight-1',
+            tenant_id: request.tenant_id,
+            type: 'opportunity',
+            title: 'Aumentar Promotores no Almoço',
+            description: 'Clientes que visitam no almoço têm NPS 15 pontos abaixo da média. Focar em melhorias no serviço durante este período.',
+            severity: 'medium',
+            confidence: 0.85,
+            data_points: [],
+            action_items: ['Treinar equipe de almoço', 'Oferecer sobremesa grátis para feedbacks positivos no almoço'],
+            created_at: new Date().toISOString(),
+          },
+          {
+            id: 'insight-2',
+            tenant_id: request.tenant_id,
+            type: 'risk',
+            title: 'Pico de Detratores aos Domingos',
+            description: 'Observado um aumento de 20% nos detratores aos domingos, principalmente relacionado ao tempo de espera.',
+            severity: 'high',
+            confidence: 0.92,
+            data_points: [],
+            action_items: ['Revisar escala de funcionários aos domingos', 'Implementar sistema de fila virtual'],
+            created_at: new Date().toISOString(),
+          },
+        ],
+        benchmarks: {
+          industry_nps: 40,
+          industry_sentiment: { positive: 55, neutral: 30, negative: 15 },
+          peer_comparison: {},
+        },
+      };
+    }
+
     try {
       // This is a simplified implementation
       // In a real application, this would involve complex aggregations
