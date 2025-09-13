@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste de Autenticação Supabase</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    .card {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .error {
+      color: #e53e3e;
+      background-color: #fed7d7;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    .success {
+      color: #38a169;
+      background-color: #c6f6d5;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    button {
+      background-color: #4299e1;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 8px;
+    }
+    button:hover {
+      background-color: #3182ce;
+    }
+    pre {
+      background-color: #edf2f7;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    input {
+      padding: 8px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      margin-right: 8px;
+      width: 200px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <h1>Teste de Autenticação Supabase</h1>
+  
+  <div class="card">
+    <h2>Configuração</h2>
+    <div class="form-group">
+      <label for="supabaseUrl">URL do Supabase:</label>
+      <input type="text" id="supabaseUrl" placeholder="https://xxxxxxxxxxxx.supabase.co" />
+    </div>
+    <div class="form-group">
+      <label for="supabaseKey">Chave Anônima do Supabase:</label>
+      <input type="text" id="supabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+    </div>
+    <button id="initClient">Inicializar Cliente</button>
+    <div id="initResult"></div>
+  </div>
+
+  <div class="card">
+    <h2>Verificar Sessão</h2>
+    <button id="checkSession">Verificar Sessão Atual</button>
+    <div id="sessionResult"></div>
+  </div>
+
+  <div class="card">
+    <h2>Login</h2>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" placeholder="seu@email.com" />
+    </div>
+    <div class="form-group">
+      <label for="password">Senha:</label>
+      <input type="password" id="password" placeholder="********" />
+    </div>
+    <button id="signIn">Entrar</button>
+    <div id="signInResult"></div>
+  </div>
+
+  <div class="card">
+    <h2>Logout</h2>
+    <button id="signOut">Sair</button>
+    <div id="signOutResult"></div>
+  </div>
+
+  <div class="card">
+    <h2>Testar Acesso ao Banco</h2>
+    <button id="testDatabase">Testar Acesso</button>
+    <div id="databaseResult"></div>
+  </div>
+
+  <script>
+    let supabase = null;
+
+    // Função para mostrar resultado
+    function showResult(elementId, success, message, data = null) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = '';
+      
+      const className = success ? 'success' : 'error';
+      const resultDiv = document.createElement('div');
+      resultDiv.className = className;
+      resultDiv.textContent = message;
+      
+      element.appendChild(resultDiv);
+      
+      if (data) {
+        const pre = document.createElement('pre');
+        pre.textContent = JSON.stringify(data, null, 2);
+        element.appendChild(pre);
+      }
+    }
+
+    // Inicializar cliente Supabase
+    document.getElementById('initClient').addEventListener('click', () => {
+      const supabaseUrl = document.getElementById('supabaseUrl').value;
+      const supabaseKey = document.getElementById('supabaseKey').value;
+      
+      if (!supabaseUrl || !supabaseKey) {
+        showResult('initResult', false, 'Por favor, preencha a URL e a chave do Supabase');
+        return;
+      }
+      
+      try {
+        supabase = supabase.createClient(supabaseUrl, supabaseKey, {
+          auth: {
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: true
+          }
+        });
+        
+        showResult('initResult', true, 'Cliente Supabase inicializado com sucesso!');
+      } catch (error) {
+        showResult('initResult', false, 'Erro ao inicializar cliente Supabase:', error);
+      }
+    });
+
+    // Verificar sessão atual
+    document.getElementById('checkSession').addEventListener('click', async () => {
+      if (!supabase) {
+        showResult('sessionResult', false, 'Inicialize o cliente Supabase primeiro');
+        return;
+      }
+      
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          showResult('sessionResult', false, 'Erro ao verificar sessão:', error);
+        } else if (data.session) {
+          showResult('sessionResult', true, 'Sessão ativa encontrada:', data);
+        } else {
+          showResult('sessionResult', false, 'Nenhuma sessão ativa encontrada');
+        }
+      } catch (error) {
+        showResult('sessionResult', false, 'Erro ao verificar sessão:', error);
+      }
+    });
+
+    // Login
+    document.getElementById('signIn').addEventListener('click', async () => {
+      if (!supabase) {
+        showResult('signInResult', false, 'Inicialize o cliente Supabase primeiro');
+        return;
+      }
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      if (!email || !password) {
+        showResult('signInResult', false, 'Por favor, preencha o email e a senha');
+        return;
+      }
+      
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        
+        if (error) {
+          showResult('signInResult', false, 'Erro ao fazer login:', error);
+        } else {
+          showResult('signInResult', true, 'Login realizado com sucesso!', data);
+        }
+      } catch (error) {
+        showResult('signInResult', false, 'Erro ao fazer login:', error);
+      }
+    });
+
+    // Logout
+    document.getElementById('signOut').addEventListener('click', async () => {
+      if (!supabase) {
+        showResult('signOutResult', false, 'Inicialize o cliente Supabase primeiro');
+        return;
+      }
+      
+      try {
+        const { error } = await supabase.auth.signOut();
+        
+        if (error) {
+          showResult('signOutResult', false, 'Erro ao fazer logout:', error);
+        } else {
+          showResult('signOutResult', true, 'Logout realizado com sucesso!');
+        }
+      } catch (error) {
+        showResult('signOutResult', false, 'Erro ao fazer logout:', error);
+      }
+    });
+
+    // Testar acesso ao banco
+    document.getElementById('testDatabase').addEventListener('click', async () => {
+      if (!supabase) {
+        showResult('databaseResult', false, 'Inicialize o cliente Supabase primeiro');
+        return;
+      }
+      
+      try {
+        // Tenta acessar a tabela de tenants
+        const { data, error } = await supabase
+          .from('tenants')
+          .select('id, name')
+          .limit(1);
+        
+        if (error) {
+          showResult('databaseResult', false, 'Erro ao acessar banco de dados:', error);
+        } else {
+          showResult('databaseResult', true, 'Acesso ao banco de dados bem-sucedido!', data);
+        }
+      } catch (error) {
+        showResult('databaseResult', false, 'Erro ao acessar banco de dados:', error);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+/* App.css – baseline neutro para não interferir no layout das páginas */
+
+#root {
+  /* Estique para ocupar a tela toda e não imponha largura/padding/centralização */
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: initial;
+  isolation: isolate; /* evita efeitos colaterais de contextos externos */
+}
+
+/* As classes abaixo são intencionais e não globais; não afetam páginas se não usadas */
+.app-container {
+  min-height: 100vh;
+}
+
+/* Placeholders (mantidos sem efeitos colaterais) */
+.card {}
+.read-the-docs {}
