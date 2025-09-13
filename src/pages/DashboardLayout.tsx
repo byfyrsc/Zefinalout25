@@ -62,7 +62,7 @@ export function DashboardLayout() {
                 ) : !currentRestaurant && location.pathname !== '/dashboard' ? ( // Mostra o seletor apenas se não estiver na rota do dashboard
                   <RestaurantSelector />
                 ) : (
-                  <Outlet /> {/* Renderiza o componente de página real para a rota atual */}
+                  <Outlet /> 
                 )}
               </Suspense>
             </PageTransition>
