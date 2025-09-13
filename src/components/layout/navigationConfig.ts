@@ -12,6 +12,7 @@ import {
   Calendar,
   FileText,
   MessageCircle, // Re-added for communication
+  Brain, // Novo ícone para AI Insights
 } from "lucide-react";
 
 export interface NavItem {
@@ -29,6 +30,7 @@ export const mainNavigationItems: NavItem[] = [
   { id: "qrcode", label: "QR Code", icon: QrCode, path: "/qrcode", requiresRestaurant: true },
   { id: "restaurant-analytics", label: "Restaurant Analytics", icon: BarChart3, path: "/restaurant-analytics", requiresRestaurant: true },
   { id: "advanced-analytics", label: "Advanced Analytics", icon: Sparkles, path: "/advanced-analytics" },
+  { id: "ai-insights", label: "AI Insights", icon: Brain, path: "/ai-insights" }, // Novo item de navegação
   { id: "campaigns", label: "Campaigns", icon: Gift, path: "/campaigns" },
   { id: "events", label: "Events", icon: Calendar, path: "/events" },
   { id: "gamification", label: "Gamification", icon: Users, path: "/gamification" },

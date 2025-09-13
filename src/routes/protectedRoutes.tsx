@@ -24,6 +24,7 @@ const AdvancedAnalyticsPage = lazy(() => import("@/pages/AdvancedAnalyticsPage")
 const CommunicationPage = lazy(() => import("@/pages/CommunicationPage"));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const AIInsightsPage = lazy(() => import("@/pages/AIInsightsPage")); // Nova importação
 
 
 export const protectedRoutes = [
@@ -62,6 +63,7 @@ export const protectedRoutes = [
       { path: "billing/cancel", element: <BillingCancelPage /> },
       { path: "profile", element: <ProfilePage /> },
       { path: "accessibility", element: <AccessibilityPage /> },
+      { path: "ai-insights", element: <AIInsightsPage /> }, // Nova rota
     ],
   },
 ];
