@@ -174,6 +174,22 @@ export const locationService = {
     return data || []
   },
 
+  // New method to get all locations for a specific tenant
+  async getAllByTenant(tenantId: string): Promise<Location[]> {
+    const { data, error } = await supabase
+      .from('locations')
+      .select('*')
+      .eq('tenant_id', tenantId)
+      .order('created_at', { ascending: false })
+    
+    if (error) {
+      console.error('Error fetching locations for tenant:', error)
+      return []
+    }
+    
+    return data || []
+  },
+
   async getById(id: string): Promise<Location | null> {
     const { data, error } = await supabase
       .from('locations')

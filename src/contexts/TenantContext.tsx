@@ -107,7 +107,7 @@ export const TenantProvider = ({ children }: TenantProviderProps) => {
             setCurrentTenant(mappedTenant);
 
             // Buscar localizações para este tenant
-            const tenantLocations = await locationService.getAll(userTenant.id);
+            const tenantLocations = await locationService.getAllByTenant(userTenant.id); // Alterado para getAllByTenant
             // Mapear o tipo de Location do Supabase para o tipo Location do frontend
             const mappedLocations: Location[] = tenantLocations.map(loc => ({
               id: loc.id,
