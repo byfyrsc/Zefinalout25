@@ -4,7 +4,6 @@ import { supabase } from '@/lib/supabase';
 import { userService, tenantService } from '@/lib/supabase-services';
 import type { User, Tenant, UserRole } from '@/types/database';
 import { toast } from 'sonner';
-import { env } from '@/lib/env';
 import { hasRole as checkHasRole, hasPermission as checkHasPermission, isOwner as checkIsOwner, isAdmin as checkIsAdmin, isManager as checkIsManager, canManageUsers as checkCanManageUsers, canManageLocations as checkCanManageLocations, canViewAnalytics as checkCanViewAnalytics } from '@/lib/authHelpers';
 
 interface AuthUser extends User {
@@ -56,14 +55,84 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Mock user for development
+const MOCK_USER: AuthUser = {
+  id: 'mock-user-id-123',
+  tenant_id: 'mock-tenant-id-456',
+  email: 'admin@digaze.com',
+  role: 'owner', 
+  permissions: {
+    manage_users: true,
+    manage_locations: true,
+    manage_campaigns: true,
+    manage_events: true,
+    view_analytics: true,
+    manage_billing: true,
+    manage_api_keys: true,
+    manage_integrations: true,
+  },
+  profile_data: {},
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+  last_login_at: new Date().toISOString(),
+  first_name: 'Mock',
+  last_name: 'Admin',
+  phone: '123-456-7890',
+  avatar_url: null,
+  preferences: {},
+  is_active: true,
+  email_verified: true,
+  supabaseUser: {
+    id: 'mock-user-id-123',
+    email: 'admin@digaze.com',
+    app_metadata: { provider: 'email' },
+    user_metadata: {
+      first_name: 'Mock',
+      last_name: 'Admin',
+      tenant_id: 'mock-tenant-id-456',
+    },
+    aud: 'authenticated',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  tenant: {
+    id: 'mock-tenant-id-456',
+    name: 'Mock Restaurant Group',
+    subdomain: 'mockgroup',
+    settings: {},
+    plan_id: 'enterprise_plus',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    stripe_customer_id: null,
+    trial_ends_at: null,
+    branding: {},
+    monthly_feedback_limit: 99999,
+    location_limit: 999,
+  },
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [useMockAuth, setUseMockAuth] = useState(false);
+
+  // Check for mock auth setting from localStorage
+  useEffect(() => {
+    const storedMockAuth = localStorage.getItem('useMockAuth') === 'true';
+    setUseMockAuth(storedMockAuth);
+  }, []);
 
   // Initialize auth state
   useEffect(() => {
     let mounted = true;
+
+    if (useMockAuth) {
+      setUser(MOCK_USER);
+      setSession({ user: MOCK_USER.supabaseUser } as Session); // Mock session
+      setLoading(false);
+      return; // Skip real Supabase auth
+    }
 
     // Get initial session
     const getInitialSession = async () => {
@@ -75,7 +144,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           if (initialSession?.user) {
             await loadUserData(initialSession.user);
           } else {
-            // Se não houver sessão inicial, definir loading como false
             setLoading(false);
           }
         }
@@ -93,7 +161,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (!mounted) return;
+        if (!mounted || useMockAuth) return; // Skip if mock auth is active
         
         try {
           setSession(session);
@@ -104,7 +172,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setUser(null);
             setLoading(false);
           } else {
-            // Para outros eventos, garantir que loading seja false
             setLoading(false);
           }
         } catch (error) {
@@ -120,7 +187,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [useMockAuth]); // Re-run effect if mock auth setting changes
 
   // Load user data from database
   const loadUserData = async (supabaseUser: SupabaseUser) => {
@@ -128,7 +195,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const userData = await userService.getById(supabaseUser.id);
       
       if (userData) {
-        // Get tenant data
         const tenantData = await tenantService.getById(userData.tenant_id);
         
         if (tenantData) {
@@ -152,13 +218,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       toast.error('Erro ao carregar dados do usuário');
       setUser(null);
     } finally {
-      // Sempre definir loading como false, independentemente do resultado
       setLoading(false);
     }
   };
 
-  // Sign in
+  // Auth methods (mocked if useMockAuth is true)
   const signIn = async (email: string, password: string) => {
+    if (useMockAuth) {
+      setUser(MOCK_USER);
+      setSession({ user: MOCK_USER.supabaseUser } as Session);
+      setLoading(false);
+      toast.success('Login mockado realizado com sucesso!');
+      return {};
+    }
     try {
       setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({
@@ -182,7 +254,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // Sign up
   const signUp = async (
     email: string, 
     password: string, 
@@ -193,6 +264,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       subdomain?: string;
     }
   ) => {
+    if (useMockAuth) {
+      toast.info('Cadastro mockado. Recarregue a página para usar o usuário mock.');
+      return {};
+    }
     try {
       setLoading(true);
       
@@ -225,8 +300,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // Sign out
   const signOut = async () => {
+    if (useMockAuth) {
+      setUser(null);
+      setSession(null);
+      setLoading(false);
+      toast.success('Logout mockado realizado com sucesso!');
+      return;
+    }
     try {
       setLoading(true);
       const { error } = await supabase.auth.signOut();
@@ -246,8 +327,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // Reset password
   const resetPassword = async (email: string) => {
+    if (useMockAuth) {
+      toast.info('Redefinição de senha mockada. Verifique o console.');
+      console.log(`Mock: Password reset email sent to ${email}`);
+      return {};
+    }
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`
@@ -267,8 +352,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // Update password
   const updatePassword = async (password: string) => {
+    if (useMockAuth) {
+      toast.success('Senha mockada atualizada com sucesso!');
+      return {};
+    }
     try {
       const { error } = await supabase.auth.updateUser({ password });
       
@@ -286,8 +374,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // Update profile
   const updateProfile = async (updates: Partial<User>) => {
+    if (useMockAuth) {
+      setUser(prevUser => prevUser ? { ...prevUser, ...updates } : null);
+      toast.success('Perfil mockado atualizado com sucesso!');
+      return {};
+    }
     try {
       if (!user) {
         throw new Error('Usuário não autenticado');

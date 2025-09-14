@@ -78,11 +78,11 @@ npm run build
 
 Para facilitar o desenvolvimento, o projeto suporta autenticação mockada:
 
-1. Crie um arquivo `.env` na raiz do projeto (use `.env.example` como base)
-2. Defina `VITE_USE_MOCK_AUTH=true` para ativar a autenticação mockada
-3. O usuário mockado é Carlos Silva (admin) com acesso completo
+1.  Abra o `DevHelper` (o pequeno painel de ferramentas no canto inferior direito da tela em modo de desenvolvimento).
+2.  Ative a chave "Usar dados mock".
+3.  Recarregue a página.
 
-Isso permite testar o dashboard e funcionalidades protegidas sem precisar de uma conta real.
+Isso permite testar o dashboard e funcionalidades protegidas sem precisar de uma conta real. O usuário mockado é um `Admin` com acesso completo.
 
 ### Mobile Development
 ```bash

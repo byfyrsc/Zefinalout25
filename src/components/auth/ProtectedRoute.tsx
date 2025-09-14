@@ -28,6 +28,17 @@ export const ProtectedRoute = ({
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Check for mock auth setting from localStorage
+  const [useMockAuth, setUseMockAuth] = useState(false);
+  useEffect(() => {
+    setUseMockAuth(localStorage.getItem('useMockAuth') === 'true');
+  }, []);
+
+  // If mock auth is enabled, bypass all checks and render children
+  if (useMockAuth) {
+    return <>{children}</>;
+  }
+
   // State to track authentication timeout
   const [authTimeout, setAuthTimeout] = useState(false);
   

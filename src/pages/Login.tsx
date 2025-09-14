@@ -109,14 +109,19 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoginView, setIsLoginView] = useState(true);
+  const [useMockAuth, setUseMockAuth] = useState(false);
+
+  useEffect(() => {
+    setUseMockAuth(localStorage.getItem('useMockAuth') === 'true');
+  }, []);
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   useEffect(() => {
-    if (user) {
+    if (user || useMockAuth) { // Redirect if user is logged in or mock auth is active
       navigate(from, { replace: true });
     }
-  }, [user, navigate, from]);
+  }, [user, navigate, from, useMockAuth]);
 
   const toggleView = () => setIsLoginView(!isLoginView);
 
@@ -158,7 +163,7 @@ export default function Login() {
                   <CardDescription>Insira seus dados para acessar sua conta.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <LoginForm redirectTo={from} />
+                  <LoginForm redirectTo={from} onToggleMode={toggleView} />
                 </CardContent>
               </Card>
             ) : (
@@ -168,7 +173,7 @@ export default function Login() {
                   <CardDescription>Preencha o formulário para começar a usar o DigaZÉ.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <SignUpForm redirectTo={from} />
+                  <SignUpForm redirectTo={from} onToggleMode={toggleView} />
                 </CardContent>
               </Card>
             )}
