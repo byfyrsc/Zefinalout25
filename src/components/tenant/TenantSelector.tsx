@@ -80,17 +80,7 @@ const TenantSelector = () => {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
-          <Card className="inline-block bg-gradient-to-r from-muted/50 to-background/50 border-dashed">
-            <CardContent className="p-6">
-              <Building2 className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-              <p className="text-muted-foreground mb-3">Precisa de uma nova conta?</p>
-              <Button variant="outline" size="sm">
-                Solicitar Acesso
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        {/* A seção "Precisa de uma nova conta?" foi removida daqui */}
       </div>
     </div>
   );
