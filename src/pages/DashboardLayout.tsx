@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/layout/Sidebar";
 import { Header } from "../components/layout/Header";
-import { cn } from "@/lib/utils";
+import { cn } "@/lib/utils";
 import { useTenant } from "@/contexts/TenantContext";
 import { useResponsive } from "@/hooks/useResponsive";
 import { PageTransition } from "@/components/ui/micro-interactions";
@@ -31,11 +31,6 @@ export function DashboardLayout() {
     navigate('/dashboard'); // Navega de volta para a raiz do dashboard para mostrar o seletor de localizações
   };
 
-  // Filtra os itens de navegação com base na seleção de uma localização
-  const filteredNavigationItems = mainNavigationItems.filter(item =>
-    !item.requiresLocation || currentLocation // Alterado para requiresLocation e currentLocation
-  );
-
   // Determina a visualização ativa para destaque da barra lateral com base no caminho atual
   const activeViewId = mainNavigationItems.find(item => item.path === location.pathname)?.id || 'dashboard';
 
@@ -44,9 +39,10 @@ export function DashboardLayout() {
       <Sidebar
         isSidebarOpen={isSidebarOpen}
         setSidebarOpen={setSidebarOpen}
-        navigationItems={filteredNavigationItems}
+        navigationItems={mainNavigationItems} // Passar todos os itens, a Sidebar fará a filtragem
         activeView={activeViewId}
         onBackToLocations={handleBackToLocations} // Alterado para onBackToLocations
+        currentLocation={currentLocation} // Passar currentLocation para a Sidebar
       />
       <div className="flex flex-col flex-1">
         <Header toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />

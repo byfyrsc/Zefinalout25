@@ -20,6 +20,7 @@ import { useTenant } from "@/contexts/TenantContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { NavItem } from "./navigationConfig"; // Importa o tipo NavItem
+import { Location } from "@/types/tenant"; // Importar o tipo Location
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -27,6 +28,7 @@ interface SidebarProps {
   navigationItems: NavItem[];
   activeView: string; // Agora representa o ID do item de navegação ativo
   onBackToLocations: () => void; // Alterado para onBackToLocations
+  currentLocation: Location | null; // Adicionado currentLocation como prop
 }
 
 export function Sidebar({
@@ -35,8 +37,9 @@ export function Sidebar({
   navigationItems,
   activeView,
   onBackToLocations, // Alterado para onBackToLocations
+  currentLocation, // Recebido como prop
 }: SidebarProps) {
-  const { currentTenant, currentLocation } = useTenant(); // Alterado para currentLocation
+  const { currentTenant } = useTenant(); // Removido currentLocation do useTenant
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,6 +51,11 @@ export function Sidebar({
       setSidebarOpen(false);
     }
   };
+
+  // Filtra os itens de navegação com base na seleção de uma localização
+  const filteredNavigationItems = navigationItems.filter(item =>
+    !item.requiresLocation || currentLocation
+  );
 
   return (
     <>
@@ -95,7 +103,7 @@ export function Sidebar({
         {/* Navegação */}
         <nav className="flex-1 overflow-y-auto py-4 px-2">
           <ul className="space-y-1">
-            {navigationItems.map((item) => {
+            {filteredNavigationItems.map((item) => { // Usar filteredNavigationItems
               const Icon = item.icon;
               // Determina se o item atual está ativo com base no seu ID correspondente à activeView
               const isActive = activeView === item.id;
