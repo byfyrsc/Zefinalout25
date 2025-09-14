@@ -151,8 +151,10 @@ export const UserProfile = ({ className }: UserProfileProps) => {
     }
   };
 
-  const getInitials = (firstName: string, lastName: string) => {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  const getInitials = (firstName?: string | null, lastName?: string | null) => {
+    const firstInitial = firstName?.charAt(0) || '';
+    const lastInitial = lastName?.charAt(0) || '';
+    return (firstInitial + lastInitial).toUpperCase() || 'U'; // Fallback para 'U' se ambos forem vazios
   };
 
   return (
@@ -168,7 +170,7 @@ export const UserProfile = ({ className }: UserProfileProps) => {
             </Avatar>
             <div className="space-y-1">
               <CardTitle className="text-2xl">
-                {user.first_name} {user.last_name}
+                {user.first_name || 'Usuário'} {user.last_name || 'Desconhecido'}
               </CardTitle>
               <CardDescription className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
