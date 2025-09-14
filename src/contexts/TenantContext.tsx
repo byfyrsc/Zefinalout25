@@ -19,7 +19,7 @@ interface TenantProviderProps {
 }
 
 export const TenantProvider = ({ children }: TenantProviderProps) => {
-  const { user, loading: authLoading } = useAuth(); // Obter usuário e estado de carregamento da autenticação
+  const { user, loading: authLoading, useMockAuth } = useAuth(); // Obter usuário, estado de carregamento da autenticação e useMockAuth
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null); // Alterado para currentLocation
   const [tenants, setTenants] = useState<Tenant[]>([]);
@@ -30,32 +30,117 @@ export const TenantProvider = ({ children }: TenantProviderProps) => {
     return locations.filter(location => location.tenantId === tenantId);
   };
 
-  // Carregar tenants e localizações do Supabase
+  // Carregar tenants e localizações do Supabase ou usar mocks
   useEffect(() => {
     const fetchTenantData = async () => {
       if (authLoading) return; // Esperar a autenticação carregar
 
       setLoading(true);
       try {
-        if (user) {
-          // Para um usuário logado, buscar o tenant ao qual ele pertence
+        if (useMockAuth && user) {
+          // Usar dados mockados se a autenticação mockada estiver ativa
+          const mockTenant: Tenant = {
+            id: user.tenant.id,
+            name: user.tenant.name,
+            email: user.email,
+            plan: user.tenant.plan_id as 'starter' | 'professional' | 'enterprise', // Assumindo que plan_id é compatível
+            createdAt: user.tenant.created_at,
+            isActive: true,
+          };
+
+          const mockLocations: Location[] = [
+            {
+              id: 'mock-location-1',
+              tenantId: mockTenant.id,
+              name: 'Mock Restaurant Downtown',
+              address: '123 Mock Street, Mockville',
+              phone: '555-1234',
+              email: 'downtown@mockrestaurant.com',
+              qrCode: 'https://mock-qr.com/downtown',
+              isActive: true,
+              settings: {
+                theme: 'light',
+                allowAnonymousFeedback: true,
+                emailNotifications: true,
+              },
+              createdAt: new Date().toISOString(),
+            },
+            {
+              id: 'mock-location-2',
+              tenantId: mockTenant.id,
+              name: 'Mock Restaurant Uptown',
+              address: '456 Mock Avenue, Mockville',
+              phone: '555-5678',
+              email: 'uptown@mockrestaurant.com',
+              qrCode: 'https://mock-qr.com/uptown',
+              isActive: true,
+              settings: {
+                theme: 'dark',
+                allowAnonymousFeedback: false,
+                emailNotifications: true,
+              },
+              createdAt: new Date().toISOString(),
+            },
+          ];
+
+          setTenants([mockTenant]);
+          setCurrentTenant(mockTenant);
+          setLocations(mockLocations);
+          setCurrentLocation(mockLocations[0]); // Seleciona a primeira localização mockada por padrão
+
+        } else if (user) {
+          // Para um usuário logado (autenticação real), buscar o tenant ao qual ele pertence
           const userTenant = await tenantService.getById(user.tenant.id);
           if (userTenant) {
-            setTenants([userTenant]); // O usuário só vê seu próprio tenant
-            setCurrentTenant(userTenant);
+            // Mapear o tipo de Tenant do Supabase para o tipo Tenant do frontend
+            const mappedTenant: Tenant = {
+              id: userTenant.id,
+              name: userTenant.name,
+              email: user.email, // Usar email do usuário logado
+              logo: userTenant.branding?.logo_url || undefined, // Assumindo branding tem logo_url
+              plan: userTenant.plan_id as 'starter' | 'professional' | 'enterprise',
+              createdAt: userTenant.created_at,
+              isActive: true, // Assumindo que o tenant está ativo
+            };
+
+            setTenants([mappedTenant]); // O usuário só vê seu próprio tenant
+            setCurrentTenant(mappedTenant);
 
             // Buscar localizações para este tenant
             const tenantLocations = await locationService.getAll(userTenant.id);
-            setLocations(tenantLocations);
+            // Mapear o tipo de Location do Supabase para o tipo Location do frontend
+            const mappedLocations: Location[] = tenantLocations.map(loc => ({
+              id: loc.id,
+              tenantId: loc.tenant_id,
+              name: loc.name,
+              address: loc.address || '',
+              phone: loc.phone || '',
+              email: loc.email || '',
+              logo: loc.settings?.logo_url || undefined, // Assumindo settings tem logo_url
+              qrCode: `https://digaze.com/feedback/${loc.id}`, // Gerar URL de QR Code mockada
+              isActive: loc.is_active,
+              settings: {
+                theme: (loc.settings?.theme as 'light' | 'dark') || 'light',
+                allowAnonymousFeedback: loc.settings?.allow_anonymous_feedback || false,
+                emailNotifications: loc.settings?.email_notifications || false,
+              },
+              createdAt: loc.created_at,
+            }));
+            setLocations(mappedLocations);
 
             // Tentar carregar a localização salva no localStorage
             const savedLocationId = localStorage.getItem("currentLocationId");
             if (savedLocationId) {
-              const location = tenantLocations.find(l => l.id === savedLocationId && l.tenantId === userTenant.id);
+              const location = mappedLocations.find(l => l.id === savedLocationId && l.tenantId === mappedTenant.id);
               if (location) {
                 setCurrentLocation(location);
+              } else if (mappedLocations.length > 0) {
+                setCurrentLocation(mappedLocations[0]); // Seleciona a primeira se a salva não for encontrada
               }
+            } else if (mappedLocations.length > 0) {
+              setCurrentLocation(mappedLocations[0]); // Seleciona a primeira se nenhuma for salva
             }
+
           } else {
             toast.error("Tenant do usuário não encontrado.");
             setCurrentTenant(null);
@@ -77,7 +162,7 @@ export const TenantProvider = ({ children }: TenantProviderProps) => {
     };
 
     fetchTenantData();
-  }, [user, authLoading]); // Depende do usuário e do estado de carregamento da autenticação
+  }, [user, authLoading, useMockAuth]); // Depende do usuário, do estado de carregamento da autenticação e de useMockAuth
 
   // Salvar tenant no localStorage quando ele muda
   useEffect(() => {

@@ -16,6 +16,7 @@ interface AuthContextType {
   user: AuthUser | null;
   session: Session | null;
   loading: boolean;
+  useMockAuth: boolean; // Adicionado para expor o estado de mock
   
   // Auth Methods
   signIn: (email: string, password: string) => Promise<{ error?: AuthError }>;
@@ -417,6 +418,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     session,
     loading,
+    useMockAuth,
     
     // Auth Methods
     signIn,
