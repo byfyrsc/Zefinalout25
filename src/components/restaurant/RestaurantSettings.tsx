@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Restaurant } from "@/types/tenant";
+import { Location } from "@/types/tenant"; // Alterado para Location
 import { useToast } from "@/hooks/use-toast";
 import { 
   Settings, 
@@ -20,19 +20,19 @@ import {
   Info
 } from "lucide-react";
 
-interface RestaurantSettingsProps {
-  restaurant: Restaurant;
+interface LocationSettingsProps { // Alterado para LocationSettingsProps
+  location: Location; // Alterado para location
 }
 
-const RestaurantSettings = ({ restaurant }: RestaurantSettingsProps) => {
+const LocationSettings = ({ location }: LocationSettingsProps) => { // Alterado para location
   const [formData, setFormData] = useState({
-    name: restaurant.name,
-    address: restaurant.address,
-    phone: restaurant.phone,
-    email: restaurant.email,
-    theme: restaurant.settings.theme,
-    allowAnonymousFeedback: restaurant.settings.allowAnonymousFeedback,
-    emailNotifications: restaurant.settings.emailNotifications,
+    name: location.name,
+    address: location.address,
+    phone: location.phone,
+    email: location.email,
+    theme: location.settings.theme,
+    allowAnonymousFeedback: location.settings.allowAnonymousFeedback,
+    emailNotifications: location.settings.emailNotifications,
   });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -51,7 +51,7 @@ const RestaurantSettings = ({ restaurant }: RestaurantSettingsProps) => {
     setTimeout(() => {
       toast({
         title: "Configurações salvas",
-        description: "As configurações do restaurante foram atualizadas com sucesso.",
+        description: "As configurações da localização foram atualizadas com sucesso.",
       });
       setIsLoading(false);
     }, 1000);
@@ -70,12 +70,12 @@ const RestaurantSettings = ({ restaurant }: RestaurantSettingsProps) => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome do Restaurante</Label>
+              <Label htmlFor="name">Nome da Localização</Label> {/* Alterado para Localização */}
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Nome do restaurante"
+                placeholder="Nome da localização"
               />
             </div>
 
@@ -117,7 +117,7 @@ const RestaurantSettings = ({ restaurant }: RestaurantSettingsProps) => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="contato@restaurante.com"
+                  placeholder="contato@localizacao.com"
                 />
               </div>
             </div>
@@ -202,14 +202,14 @@ const RestaurantSettings = ({ restaurant }: RestaurantSettingsProps) => {
             <div className="space-y-3">
               <Label>URL Atual do Feedback</Label>
               <div className="p-3 bg-muted/50 rounded-lg border">
-                <code className="text-sm">{restaurant.qrCode}</code>
+                <code className="text-sm">{location.qrCode}</code>
               </div>
             </div>
             
             <div className="space-y-3">
-              <Label>ID do Restaurante</Label>
+              <Label>ID da Localização</Label> {/* Alterado para Localização */}
               <div className="p-3 bg-muted/50 rounded-lg border">
-                <code className="text-sm">{restaurant.id}</code>
+                <code className="text-sm">{location.id}</code>
               </div>
             </div>
           </div>
@@ -219,7 +219,7 @@ const RestaurantSettings = ({ restaurant }: RestaurantSettingsProps) => {
               Sobre o QR Code
             </h4>
             <ul className="text-sm text-muted-foreground space-y-1">
-              <li>• O QR Code é gerado automaticamente baseado no ID do restaurante</li>
+              <li>• O QR Code é gerado automaticamente baseado no ID da localização</li>
               <li>• Clientes escaneiam o código e são direcionados para o formulário</li>
               <li>• As configurações acima afetam a experiência do cliente</li>
               <li>• Você pode regenerar o QR Code a qualquer momento na aba "QR Code"</li>
@@ -243,4 +243,4 @@ const RestaurantSettings = ({ restaurant }: RestaurantSettingsProps) => {
   );
 };
 
-export default RestaurantSettings;
+export default LocationSettings; // Exportar como LocationSettings

@@ -22,7 +22,7 @@ interface HeaderProps {
 
 export function Header({ toggleSidebar }: HeaderProps) {
   const { user, signOut } = useAuth();
-  const { currentTenant, currentRestaurant } = useTenant();
+  const { currentTenant, currentLocation } = useTenant(); // Alterado para currentLocation
   const navigate = useNavigate();
   const { isDarkMode, toggleDarkMode } = useUIStore(); // Obter estado e função do UI Store
 

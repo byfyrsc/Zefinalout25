@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Feedback, Restaurant } from "@/types/tenant";
+import { Feedback, Location } from "@/types/tenant"; // Alterado para Location
 import { 
   BarChart, 
   Bar, 
@@ -27,12 +27,12 @@ import {
   Award
 } from "lucide-react";
 
-interface RestaurantAnalyticsProps {
+interface LocationAnalyticsProps { // Alterado para LocationAnalyticsProps
   feedbacks: Feedback[];
-  restaurant: Restaurant;
+  location: Location; // Alterado para location
 }
 
-const RestaurantAnalytics = ({ feedbacks, restaurant }: RestaurantAnalyticsProps) => {
+const RestaurantAnalytics = ({ feedbacks, location }: LocationAnalyticsProps) => { // Alterado para location
   const analytics = useMemo(() => {
     // Rating distribution
     const ratingDistribution = [1, 2, 3, 4, 5].map(rating => ({

@@ -26,7 +26,7 @@ interface SidebarProps {
   setSidebarOpen: (open: boolean) => void;
   navigationItems: NavItem[];
   activeView: string; // Agora representa o ID do item de navegação ativo
-  onBackToRestaurants: () => void;
+  onBackToLocations: () => void; // Alterado para onBackToLocations
 }
 
 export function Sidebar({
@@ -34,9 +34,9 @@ export function Sidebar({
   setSidebarOpen,
   navigationItems,
   activeView,
-  onBackToRestaurants,
+  onBackToLocations, // Alterado para onBackToLocations
 }: SidebarProps) {
-  const { currentTenant, currentRestaurant } = useTenant();
+  const { currentTenant, currentLocation } = useTenant(); // Alterado para currentLocation
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -75,9 +75,9 @@ export function Sidebar({
             </div>
             <div>
               <h1 className="text-lg font-bold">DigaZÉ</h1>
-              {currentRestaurant && (
+              {currentLocation && ( // Alterado para currentLocation
                 <p className="text-xs text-muted-foreground truncate max-w-[120px]">
-                  {currentRestaurant.name}
+                  {currentLocation.name}
                 </p>
               )}
             </div>
@@ -133,10 +133,10 @@ export function Sidebar({
 
         {/* Rodapé da barra lateral */}
         <div className="p-4 border-t border-border">
-          {currentRestaurant && (
-            <Button variant="ghost" onClick={onBackToRestaurants} className="w-full justify-start mb-2">
+          {currentLocation && ( // Alterado para currentLocation
+            <Button variant="ghost" onClick={onBackToLocations} className="w-full justify-start mb-2"> {/* Alterado para onBackToLocations */}
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Ver Restaurantes
+              Ver Localizações
             </Button>
           )}
           {/* Perfil do usuário */}

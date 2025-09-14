@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { Tenant, Restaurant, TenantContextType } from "@/types/tenant";
-import { mockTenants, mockRestaurants } from "@/data/mockData";
+import { Tenant, Location, TenantContextType } from "@/types/tenant"; // Alterado para Location
+import { useAuth } from "@/contexts/AuthContext"; // Importar useAuth
+import { tenantService, locationService } from "@/lib/supabase-services"; // Importar serviços do Supabase
+import { toast } from "sonner"; // Importar toast para notificações
 
 const TenantContext = createContext<TenantContextType | undefined>(undefined);
 
@@ -17,50 +19,67 @@ interface TenantProviderProps {
 }
 
 export const TenantProvider = ({ children }: TenantProviderProps) => {
+  const { user, loading: authLoading } = useAuth(); // Obter usuário e estado de carregamento da autenticação
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
-  const [currentRestaurant, setCurrentRestaurant] = useState<Restaurant | null>(null);
-  const [tenants] = useState<Tenant[]>(mockTenants);
-  const [restaurants] = useState<Restaurant[]>(mockRestaurants);
+  const [currentLocation, setCurrentLocation] = useState<Location | null>(null); // Alterado para currentLocation
+  const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]); // Alterado para locations
+  const [loading, setLoading] = useState(true);
 
-  const getRestaurantsByTenant = (tenantId: string): Restaurant[] => {
-    return restaurants.filter(restaurant => restaurant.tenantId === tenantId);
+  const getLocationsByTenant = (tenantId: string): Location[] => { // Alterado para getLocationsByTenant
+    return locations.filter(location => location.tenantId === tenantId);
   };
 
-  // Load tenant from localStorage on mount
+  // Carregar tenants e localizações do Supabase
   useEffect(() => {
-    const savedTenantId = localStorage.getItem("currentTenantId");
-    const savedRestaurantId = localStorage.getItem("currentRestaurantId");
-    
-    // Check if we're in development mode with mock auth
-    const isDevelopment = import.meta.env.DEV;
-    const useMockAuth = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
-    
-    if (isDevelopment && useMockAuth) {
-      // Set default mock tenant and restaurant
-      const defaultTenant = mockTenants[0]; // RestaurantGroup Brasil
-      const defaultRestaurant = mockRestaurants[0]; // Sabor & Arte
-      
-      setCurrentTenant(defaultTenant);
-      setCurrentRestaurant(defaultRestaurant);
-      return;
-    }
-    
-    if (savedTenantId) {
-      const tenant = tenants.find(t => t.id === savedTenantId);
-      if (tenant) {
-        setCurrentTenant(tenant);
-        
-        if (savedRestaurantId) {
-          const restaurant = restaurants.find(r => r.id === savedRestaurantId && r.tenantId === savedTenantId);
-          if (restaurant) {
-            setCurrentRestaurant(restaurant);
-          }
-        }
-      }
-    }
-  }, [tenants, restaurants]);
+    const fetchTenantData = async () => {
+      if (authLoading) return; // Esperar a autenticação carregar
 
-  // Save tenant to localStorage when it changes
+      setLoading(true);
+      try {
+        if (user) {
+          // Para um usuário logado, buscar o tenant ao qual ele pertence
+          const userTenant = await tenantService.getById(user.tenant.id);
+          if (userTenant) {
+            setTenants([userTenant]); // O usuário só vê seu próprio tenant
+            setCurrentTenant(userTenant);
+
+            // Buscar localizações para este tenant
+            const tenantLocations = await locationService.getAll(userTenant.id);
+            setLocations(tenantLocations);
+
+            // Tentar carregar a localização salva no localStorage
+            const savedLocationId = localStorage.getItem("currentLocationId");
+            if (savedLocationId) {
+              const location = tenantLocations.find(l => l.id === savedLocationId && l.tenantId === userTenant.id);
+              if (location) {
+                setCurrentLocation(location);
+              }
+            }
+          } else {
+            toast.error("Tenant do usuário não encontrado.");
+            setCurrentTenant(null);
+            setCurrentLocation(null);
+          }
+        } else {
+          // Se não houver usuário logado, limpar estados
+          setTenants([]);
+          setLocations([]);
+          setCurrentTenant(null);
+          setCurrentLocation(null);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados do tenant/localizações:", error);
+        toast.error("Erro ao carregar dados da empresa ou localizações.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTenantData();
+  }, [user, authLoading]); // Depende do usuário e do estado de carregamento da autenticação
+
+  // Salvar tenant no localStorage quando ele muda
   useEffect(() => {
     if (currentTenant) {
       localStorage.setItem("currentTenantId", currentTenant.id);
@@ -69,24 +88,34 @@ export const TenantProvider = ({ children }: TenantProviderProps) => {
     }
   }, [currentTenant]);
 
-  // Save restaurant to localStorage when it changes
+  // Salvar localização no localStorage quando ela muda
   useEffect(() => {
-    if (currentRestaurant) {
-      localStorage.setItem("currentRestaurantId", currentRestaurant.id);
+    if (currentLocation) {
+      localStorage.setItem("currentLocationId", currentLocation.id);
     } else {
-      localStorage.removeItem("currentRestaurantId");
+      localStorage.removeItem("currentLocationId");
     }
-  }, [currentRestaurant]);
+  }, [currentLocation]);
 
   const value: TenantContextType = {
     currentTenant,
-    currentRestaurant,
+    currentLocation,
     setCurrentTenant,
-    setCurrentRestaurant,
+    setCurrentLocation,
     tenants,
-    restaurants,
-    getRestaurantsByTenant,
+    locations,
+    getLocationsByTenant,
   };
+
+  // Se ainda estiver carregando, pode retornar um spinner ou null
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="ml-4 text-lg">Carregando dados da empresa...</div>
+      </div>
+    );
+  }
 
   return (
     <TenantContext.Provider value={value}>

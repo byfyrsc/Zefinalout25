@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { EnhancedSkeleton } from "@/components/ui/enhanced-skeleton";
 import { ElasticButton, StaggeredList } from "@/components/ui/micro-interactions";
 import { useAccessibility, ScreenReaderOnly } from "@/components/accessibility/AccessibilityProvider";
-import { Feedback } from "@/types/tenant";
+import { Feedback } from "@/types/tenant"; // Importar Feedback do types/tenant
 import { Star, Calendar, User, MessageSquare, Filter, Search } from "lucide-react";
 
 interface FeedbackListProps {
@@ -181,7 +181,7 @@ const FeedbackList = ({ feedbacks }: FeedbackListProps) => {
               <h3 className="text-lg font-semibold mb-2">Nenhum feedback encontrado</h3>
               <p className="text-muted-foreground">
                 {feedbacks.length === 0 
-                  ? "Ainda não há feedbacks para este restaurante." 
+                  ? "Ainda não há feedbacks para esta localização." 
                   : "Tente ajustar os filtros para encontrar feedbacks."
                 }
               </p>

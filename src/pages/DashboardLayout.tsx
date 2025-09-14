@@ -11,10 +11,10 @@ import { mainNavigationItems, NavItem } from "@/components/layout/navigationConf
 
 // Lazy load main content components that are not directly rendered by Outlet
 const TenantSelector = lazy(() => import("@/components/tenant/TenantSelector"));
-const RestaurantSelector = lazy(() => import("@/components/tenant/RestaurantSelector"));
+const LocationSelector = lazy(() => import("@/components/tenant/RestaurantSelector")); // Alterado para LocationSelector
 
 export function DashboardLayout() {
-  const { currentTenant, currentRestaurant, setCurrentRestaurant } = useTenant();
+  const { currentTenant, currentLocation, setCurrentLocation } = useTenant(); // Alterado para currentLocation
   const { isMobile } = useResponsive();
   const location = useLocation();
   const navigate = useNavigate();
@@ -26,14 +26,14 @@ export function DashboardLayout() {
     setSidebarOpen(!isMobile);
   }, [isMobile]);
 
-  const handleBackToRestaurants = () => {
-    setCurrentRestaurant(null);
-    navigate('/dashboard'); // Navega de volta para a raiz do dashboard para mostrar o seletor de restaurantes
+  const handleBackToLocations = () => { // Alterado para handleBackToLocations
+    setCurrentLocation(null); // Alterado para setCurrentLocation
+    navigate('/dashboard'); // Navega de volta para a raiz do dashboard para mostrar o seletor de localizações
   };
 
-  // Filtra os itens de navegação com base na seleção de um restaurante
+  // Filtra os itens de navegação com base na seleção de uma localização
   const filteredNavigationItems = mainNavigationItems.filter(item =>
-    !item.requiresRestaurant || currentRestaurant
+    !item.requiresLocation || currentLocation // Alterado para requiresLocation e currentLocation
   );
 
   // Determina a visualização ativa para destaque da barra lateral com base no caminho atual
@@ -46,9 +46,7 @@ export function DashboardLayout() {
         setSidebarOpen={setSidebarOpen}
         navigationItems={filteredNavigationItems}
         activeView={activeViewId}
-        // A barra lateral lidará com a navegação internamente usando o 'navigate' do react-router-dom
-        // Não é necessário o prop setActiveView aqui, pois é derivado de location.pathname
-        onBackToRestaurants={handleBackToRestaurants}
+        onBackToLocations={handleBackToLocations} // Alterado para onBackToLocations
       />
       <div className="flex flex-col flex-1">
         <Header toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
@@ -56,11 +54,11 @@ export function DashboardLayout() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <PageTransition>
               <Suspense fallback={<SkeletonPresets.Dashboard />}>
-                {/* Renderiza TenantSelector ou RestaurantSelector se não estiverem selecionados */}
+                {/* Renderiza TenantSelector ou LocationSelector se não estiverem selecionados */}
                 {!currentTenant ? (
                   <TenantSelector />
-                ) : !currentRestaurant && location.pathname !== '/dashboard' ? ( // Mostra o seletor apenas se não estiver na rota do dashboard
-                  <RestaurantSelector />
+                ) : !currentLocation && location.pathname !== '/dashboard' ? ( // Mostra o seletor apenas se não estiver na rota do dashboard
+                  <LocationSelector /> // Alterado para LocationSelector
                 ) : (
                   <Outlet /> 
                 )}

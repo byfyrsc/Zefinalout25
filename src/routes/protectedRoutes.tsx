@@ -3,7 +3,7 @@ import { lazy } from "react";
 import { ProtectedRoute } from "@/routes/components/Protected";
 import { DashboardLayout } from "@/pages/DashboardLayout";
 
-const Index = lazy(() => import("@/pages/Index")); // Este é o seletor de inquilino/restaurante
+const Index = lazy(() => import("@/pages/Index")); // Este é o seletor de inquilino/localização
 
 // Páginas de faturamento (são páginas completas, não sub-visualizações de um componente de dashboard)
 const BillingPage = lazy(() => import("@/pages/Billing").then((module) => ({ default: module.Billing })));
@@ -26,7 +26,7 @@ const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const AIInsightsPage = lazy(() => import("@/pages/AIInsightsPage"));
 const GeneralAnalyticsPage = lazy(() => import("@/pages/GeneralAnalyticsPage"));
-const NPSEnginePage = lazy(() => import("@/pages/NPSEnginePage")); // Nova importação
+const NPSEnginePage = lazy(() => import("@/pages/NPSEnginePage"));
 
 
 export const protectedRoutes = [
@@ -39,19 +39,19 @@ export const protectedRoutes = [
     ),
     children: [
       {
-        index: true, // Renderiza Index (seletor de inquilino/restaurante) em "/"
+        index: true, // Renderiza Index (seletor de inquilino/localização) em "/"
         element: <Index />,
       },
       {
-        path: "dashboard", // Renderiza Index (seletor de inquilino/restaurante) em "/dashboard"
+        path: "dashboard", // Renderiza Index (seletor de inquilino/localização) em "/dashboard"
         element: <Index />,
       },
-      // Rotas específicas para visualizações relacionadas ao restaurante
+      // Rotas específicas para visualizações relacionadas à localização
       { path: "overview", element: <RestaurantOverviewPage /> },
       { path: "feedback", element: <RestaurantFeedbackPage /> },
       { path: "qrcode", element: <RestaurantQRCodePage /> },
-      { path: "restaurant-analytics", element: <RestaurantAnalyticsPage /> },
-      { path: "restaurant-settings", element: <RestaurantSettingsPage /> },
+      { path: "location-analytics", element: <RestaurantAnalyticsPage /> }, // Alterado para location-analytics
+      { path: "location-settings", element: <RestaurantSettingsPage /> }, // Alterado para location-settings
 
       // Rotas gerais do aplicativo
       { path: "advanced-analytics", element: <AdvancedAnalyticsPage /> },
@@ -67,7 +67,7 @@ export const protectedRoutes = [
       { path: "accessibility", element: <AccessibilityPage /> },
       { path: "ai-insights", element: <AIInsightsPage /> },
       { path: "general-analytics", element: <GeneralAnalyticsPage /> },
-      { path: "nps-engine", element: <NPSEnginePage /> }, // Nova rota
+      { path: "nps-engine", element: <NPSEnginePage /> },
     ],
   },
 ];

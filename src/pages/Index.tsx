@@ -1,18 +1,18 @@
 import { useTenant } from "@/contexts/TenantContext";
 import TenantSelector from "@/components/tenant/TenantSelector";
-import RestaurantSelector from "@/components/tenant/RestaurantSelector";
+import LocationSelector from "@/components/tenant/RestaurantSelector"; // Alterado para LocationSelector
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 /**
  * IndexPage serve como o ponto de entrada principal após a autenticação.
- * Garante que um inquilino e um restaurante sejam selecionados antes de renderizar o dashboard principal.
+ * Garante que um inquilino e uma localização sejam selecionados antes de renderizar o dashboard principal.
  * Se o usuário não estiver autenticado, redireciona para a página de login.
  */
 const IndexPage = () => {
   const { user, loading } = useAuth();
-  const { currentTenant, currentRestaurant } = useTenant();
+  const { currentTenant, currentLocation } = useTenant(); // Alterado para currentLocation
   const location = useLocation();
 
   if (loading) {
@@ -37,7 +37,7 @@ const IndexPage = () => {
     return <Navigate to="/login" replace />;
   }
 
-  // Se autenticado, prossegue com a seleção de inquilino/restaurante
+  // Se autenticado, prossegue com a seleção de inquilino/localização
   if (!currentTenant) {
     return (
       <motion.div
@@ -50,21 +50,21 @@ const IndexPage = () => {
     );
   }
 
-  if (!currentRestaurant) {
+  if (!currentLocation) { // Alterado para currentLocation
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <RestaurantSelector />
+        <LocationSelector /> {/* Alterado para LocationSelector */}
       </motion.div>
     );
   }
 
-  // Se o inquilino e o restaurante estiverem selecionados, e estivermos na raiz ou /dashboard,
-  // redireciona para a página de visão geral padrão do restaurante.
-  if (currentTenant && currentRestaurant && (location.pathname === '/' || location.pathname === '/dashboard')) {
+  // Se o inquilino e a localização estiverem selecionados, e estivermos na raiz ou /dashboard,
+  // redireciona para a página de visão geral padrão da localização.
+  if (currentTenant && currentLocation && (location.pathname === '/' || location.pathname === '/dashboard')) { // Alterado para currentLocation
     return <Navigate to="/overview" replace />;
   }
 

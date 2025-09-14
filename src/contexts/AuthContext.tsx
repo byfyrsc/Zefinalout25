@@ -65,52 +65,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     let mounted = true;
 
-    // Development mode bypass for testing dashboard
-    const isDevelopment = import.meta.env.DEV;
-    const useMockAuth = env.VITE_USE_MOCK_AUTH;
-    
-    console.log('AuthContext: isDevelopment', isDevelopment);
-    console.log('AuthContext: useMockAuth', useMockAuth);
-    console.log('AuthContext: VITE_USE_MOCK_AUTH value', env.VITE_USE_MOCK_AUTH);
-    
-    if (isDevelopment && useMockAuth) {
-      console.log('AuthContext: Using mock auth');
-      // Use mock user data for development
-      const mockUser: AuthUser = {
-        id: 'user-1',
-        tenant_id: 'tenant-1',
-        email: 'carlos@restaurantgroup.com.br',
-        first_name: 'Carlos',
-        last_name: 'Silva',
-        role: 'admin' as UserRole,
-        permissions: {
-          manage_users: true,
-          manage_locations: true,
-          view_analytics: true
-        },
-        is_active: true,
-        created_at: '2024-01-15',
-        updated_at: '2024-01-15',
-        supabaseUser: {
-          id: 'user-1',
-          email: 'carlos@restaurantgroup.com.br',
-        } as SupabaseUser,
-        tenant: {
-          id: 'tenant-1',
-          name: 'RestaurantGroup Brasil',
-          subdomain: 'restaurantgroup',
-          settings: {},
-          is_active: true,
-          created_at: '2024-01-15',
-          updated_at: '2024-01-15'
-        }
-      };
-      
-      setUser(mockUser);
-      setLoading(false);
-      return;
-    }
-
     // Get initial session
     const getInitialSession = async () => {
       try {

@@ -4,21 +4,21 @@ import { Badge } from "@/components/ui/badge";
 import { useTenant } from "@/contexts/TenantContext";
 import { MapPin, Phone, Mail, QrCode, ArrowLeft, Plus } from "lucide-react";
 
-const RestaurantSelector = () => {
+const LocationSelector = () => { // Renomeado para LocationSelector
   const { 
     currentTenant, 
     setCurrentTenant, 
-    setCurrentRestaurant, 
-    getRestaurantsByTenant 
+    setCurrentLocation, // Alterado para setCurrentLocation
+    getLocationsByTenant // Alterado para getLocationsByTenant
   } = useTenant();
 
   if (!currentTenant) return null;
 
-  const restaurants = getRestaurantsByTenant(currentTenant.id);
+  const locations = getLocationsByTenant(currentTenant.id); // Alterado para locations
 
   const handleBackToTenants = () => {
     setCurrentTenant(null);
-    setCurrentRestaurant(null);
+    setCurrentLocation(null); // Limpar localização ao voltar para tenants
   };
 
   return (
@@ -41,7 +41,7 @@ const RestaurantSelector = () => {
                 {currentTenant.name}
               </h1>
               <p className="text-muted-foreground">
-                Selecione um restaurante para gerenciar
+                Selecione uma localização para gerenciar
               </p>
             </div>
           </div>
@@ -53,21 +53,21 @@ const RestaurantSelector = () => {
           </Badge>
         </div>
 
-        {/* Restaurant Grid */}
+        {/* Location Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {restaurants.map((restaurant) => (
+          {locations.map((location) => ( // Alterado para locations
             <Card 
-              key={restaurant.id} 
+              key={location.id} 
               className="cursor-pointer transition-all duration-300 hover:shadow-strong hover:scale-105 bg-gradient-to-br from-card to-muted/10"
-              onClick={() => setCurrentRestaurant(restaurant)}
+              onClick={() => setCurrentLocation(location)} // Alterado para setCurrentLocation
             >
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg font-semibold">
-                    {restaurant.name}
+                    {location.name}
                   </CardTitle>
-                  <Badge variant={restaurant.isActive ? "default" : "secondary"} className="text-xs">
-                    {restaurant.isActive ? "Ativo" : "Inativo"}
+                  <Badge variant={location.isActive ? "default" : "secondary"} className="text-xs">
+                    {location.isActive ? "Ativo" : "Inativo"}
                   </Badge>
                 </div>
               </CardHeader>
@@ -76,16 +76,16 @@ const RestaurantSelector = () => {
                   <div className="flex items-start gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                     <span className="text-muted-foreground leading-relaxed">
-                      {restaurant.address}
+                      {location.address}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">{restaurant.phone}</span>
+                    <span className="text-muted-foreground">{location.phone}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">{restaurant.email}</span>
+                    <span className="text-muted-foreground">{location.email}</span>
                   </div>
                 </div>
                 
@@ -103,16 +103,16 @@ const RestaurantSelector = () => {
           ))}
         </div>
 
-        {/* Add New Restaurant Card */}
+        {/* Add New Location Card */}
         <Card className="border-dashed border-2 border-muted-foreground/20 bg-gradient-to-br from-muted/20 to-transparent">
           <CardContent className="p-8 text-center">
             <Plus className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Adicionar Novo Restaurante</h3>
+            <h3 className="text-lg font-semibold mb-2">Adicionar Nova Localização</h3>
             <p className="text-muted-foreground mb-4">
-              Expanda sua rede de restaurantes e colete mais feedback
+              Expanda sua rede de localizações e colete mais feedback
             </p>
             <Button variant="outline">
-              Adicionar Restaurante
+              Adicionar Localização
             </Button>
           </CardContent>
         </Card>
@@ -121,14 +121,14 @@ const RestaurantSelector = () => {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-primary">{restaurants.length}</div>
-              <div className="text-sm text-muted-foreground">Restaurantes Ativos</div>
+              <div className="text-2xl font-bold text-primary">{locations.length}</div>
+              <div className="text-sm text-muted-foreground">Localizações Ativas</div>
             </CardContent>
           </Card>
           <Card className="bg-gradient-to-r from-secondary/10 to-secondary/5 border-secondary/20">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-secondary">
-                {restaurants.filter(r => r.isActive).length}
+                {locations.filter(l => l.isActive).length}
               </div>
               <div className="text-sm text-muted-foreground">Em Operação</div>
             </CardContent>
@@ -147,4 +147,4 @@ const RestaurantSelector = () => {
   );
 };
 
-export default RestaurantSelector;
+export default LocationSelector; // Exportar como LocationSelector

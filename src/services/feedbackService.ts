@@ -443,37 +443,8 @@ export class FeedbackService {
     dateFrom?: string,
     dateTo?: string
   ): Promise<NPSMetrics> {
-    // Mock data fallback for development
-    if (env.VITE_USE_MOCK_DATA) {
-      console.log('Using mock NPS data for development.');
-      const mockNPS = Math.floor(Math.random() * 101) - 50; // -50 to 50
-      const mockResponses = Math.floor(Math.random() * 500) + 50;
-      const mockPromoters = Math.floor(mockResponses * (0.6 + Math.random() * 0.2)); // 60-80%
-      const mockDetractors = Math.floor(mockResponses * (0.05 + Math.random() * 0.1)); // 5-15%
-      const mockPassives = mockResponses - mockPromoters - mockDetractors;
-
-      return {
-        id: `nps_mock_${Date.now()}`,
-        tenant_id: tenantId,
-        location_id: locationId,
-        period_start: dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-        period_end: dateTo || new Date().toISOString(),
-        total_responses: mockResponses,
-        promoters: mockPromoters,
-        passives: mockPassives,
-        detractors: mockDetractors,
-        nps_score: mockNPS,
-        previous_nps_score: Math.floor(Math.random() * 101) - 50,
-        trend: mockNPS > 0 ? 'up' : 'down',
-        segments: [
-          { segment_name: 'Clientes Novos', segment_value: 'new', nps_score: Math.floor(Math.random() * 101) - 50, response_count: Math.floor(mockResponses * 0.3) },
-          { segment_name: 'Clientes Regulares', segment_value: 'regular', nps_score: Math.floor(Math.random() * 101) - 50, response_count: Math.floor(mockResponses * 0.7) },
-        ],
-        benchmark_score: 60,
-        industry_average: 45,
-        created_at: new Date().toISOString(),
-      };
-    }
+    // REMOVIDO: Mock data fallback para desenvolvimento
+    // if (env.VITE_USE_MOCK_DATA) { ... }
 
     try {
       let query = supabase
@@ -551,61 +522,8 @@ export class FeedbackService {
   static async getFeedbackAnalytics(
     request: FeedbackAnalyticsRequest
   ): Promise<FeedbackAnalyticsResponse> {
-    // Mock data fallback for development
-    if (env.VITE_USE_MOCK_DATA) {
-      console.log('Using mock analytics data for development.');
-      return {
-        summary: {
-          total_responses: 250,
-          average_nps: 35,
-          sentiment_breakdown: {
-            positive: 60,
-            neutral: 25,
-            negative: 15,
-          },
-          completion_rate: 85,
-          response_trend: [
-            { date: '2024-01-01', count: 10 },
-            { date: '2024-01-08', count: 15 },
-            { date: '2024-01-15', count: 12 },
-            { date: '2024-01-22', count: 18 },
-            { date: '2024-01-29', count: 20 },
-          ],
-        },
-        segments: [],
-        insights: [
-          {
-            id: 'insight-1',
-            tenant_id: request.tenant_id,
-            type: 'opportunity',
-            title: 'Aumentar Promotores no Almoço',
-            description: 'Clientes que visitam no almoço têm NPS 15 pontos abaixo da média. Focar em melhorias no serviço durante este período.',
-            severity: 'medium',
-            confidence: 0.85,
-            data_points: [],
-            action_items: ['Treinar equipe de almoço', 'Oferecer sobremesa grátis para feedbacks positivos no almoço'],
-            created_at: new Date().toISOString(),
-          },
-          {
-            id: 'insight-2',
-            tenant_id: request.tenant_id,
-            type: 'risk',
-            title: 'Pico de Detratores aos Domingos',
-            description: 'Observado um aumento de 20% nos detratores aos domingos, principalmente relacionado ao tempo de espera.',
-            severity: 'high',
-            confidence: 0.92,
-            data_points: [],
-            action_items: ['Revisar escala de funcionários aos domingos', 'Implementar sistema de fila virtual'],
-            created_at: new Date().toISOString(),
-          },
-        ],
-        benchmarks: {
-          industry_nps: 40,
-          industry_sentiment: { positive: 55, neutral: 30, negative: 15 },
-          peer_comparison: {},
-        },
-      };
-    }
+    // REMOVIDO: Mock data fallback para desenvolvimento
+    // if (env.VITE_USE_MOCK_DATA) { ... }
 
     try {
       // This is a simplified implementation

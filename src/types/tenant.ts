@@ -8,7 +8,8 @@ export interface Tenant {
   isActive: boolean;
 }
 
-export interface Restaurant {
+// Renomeado de Restaurant para Location para refletir o esquema do Supabase
+export interface Location {
   id: string;
   tenantId: string;
   name: string;
@@ -32,14 +33,14 @@ export interface User {
   name: string;
   email: string;
   role: 'admin' | 'manager' | 'viewer';
-  restaurantIds: string[]; // Restaurantes que o usuário pode acessar
+  locationIds: string[]; // Localizações que o usuário pode acessar
   isActive: boolean;
   createdAt: string;
 }
 
 export interface Feedback {
   id: string;
-  restaurantId: string;
+  locationId: string; // Alterado de restaurantId para locationId
   customerName?: string;
   customerEmail?: string;
   rating: number;
@@ -51,10 +52,10 @@ export interface Feedback {
 
 export interface TenantContextType {
   currentTenant: Tenant | null;
-  currentRestaurant: Restaurant | null;
+  currentLocation: Location | null; // Alterado de currentRestaurant para currentLocation
   setCurrentTenant: (tenant: Tenant | null) => void;
-  setCurrentRestaurant: (restaurant: Restaurant | null) => void;
+  setCurrentLocation: (location: Location | null) => void; // Alterado de setCurrentRestaurant
   tenants: Tenant[];
-  restaurants: Restaurant[];
-  getRestaurantsByTenant: (tenantId: string) => Restaurant[];
+  locations: Location[]; // Alterado de restaurants para locations
+  getLocationsByTenant: (tenantId: string) => Location[]; // Alterado de getRestaurantsByTenant
 }

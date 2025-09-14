@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useTenant } from "@/contexts/TenantContext";
-import { mockFeedback } from "@/data/mockData";
+import { useQuery } from "@tanstack/react-query"; // Importar useQuery
+import { feedbackService } from "@/lib/supabase-services"; // Importar feedbackService
 
 // UI Components
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,28 +33,42 @@ const StatCard = ({ icon: Icon, title, value, description, iconColor }) => (
 );
 
 const RestaurantOverviewPage = () => {
-  const { currentRestaurant } = useTenant();
+  const { currentLocation } = useTenant(); // Alterado para currentLocation
+
+  // Buscar feedbacks reais para a localização atual
+  const { data: feedbacks, isLoading: isFeedbacksLoading, error: feedbacksError } = useQuery({
+    queryKey: ['feedbacks', currentLocation?.id],
+    queryFn: () => feedbackService.getAll(currentLocation?.id),
+    enabled: !!currentLocation?.id, // Habilitar query apenas se houver currentLocation.id
+  });
 
   // Processamento de dados memorizado
-  const { restaurantFeedback, averageRating, totalFeedback, recentFeedback } = useMemo(() => {
-    if (!currentRestaurant) {
-      return { restaurantFeedback: [], averageRating: 0, totalFeedback: 0, recentFeedback: 0 };
+  const { averageRating, totalFeedback, recentFeedback } = useMemo(() => {
+    if (!feedbacks || feedbacks.length === 0) {
+      return { averageRating: 0, totalFeedback: 0, recentFeedback: 0 };
     }
-    const feedback = mockFeedback.filter(f => f.restaurantId === currentRestaurant.id);
-    const avgRating = feedback.length > 0 ? feedback.reduce((sum, f) => sum + f.rating, 0) / feedback.length : 0;
-    const total = feedback.length;
-    const recent = feedback.filter(f => new Date(f.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length;
-    return { restaurantFeedback: feedback, averageRating: avgRating, totalFeedback: total, recentFeedback: recent };
-  }, [currentRestaurant]);
+    const avgRating = feedbacks.reduce((sum, f) => sum + f.overall_rating, 0) / feedbacks.length;
+    const total = feedbacks.length;
+    const recent = feedbacks.filter(f => new Date(f.created_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length;
+    return { averageRating: avgRating, totalFeedback: total, recentFeedback: recent };
+  }, [feedbacks]);
 
-  if (!currentRestaurant) {
-    return <SkeletonPresets.Dashboard />; // Ou um estado de carregamento/vazio adequado para dados do restaurante
+  if (!currentLocation || isFeedbacksLoading) { // Alterado para currentLocation e isFeedbacksLoading
+    return <SkeletonPresets.Dashboard />;
+  }
+
+  if (feedbacksError) {
+    return (
+      <div className="text-center p-8">
+        <p className="text-destructive-foreground">Erro ao carregar feedbacks: {feedbacksError.message}</p>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-foreground">Dashboard do Restaurante</h1>
-      <p className="text-muted-foreground">Visão geral e métricas principais para {currentRestaurant.name}</p>
+      <h1 className="text-2xl font-bold text-foreground">Dashboard da Localização</h1> {/* Alterado para Localização */}
+      <p className="text-muted-foreground">Visão geral e métricas principais para {currentLocation.name}</p> {/* Alterado para currentLocation.name */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <StatCard icon={MessageSquare} title="Total de Feedbacks" value={totalFeedback} description="Desde o início" iconColor="text-primary" />
         <StatCard icon={Star} title="Avaliação Média" value={`${averageRating.toFixed(1)}/5`} description="Média geral" iconColor="text-yellow-500" />

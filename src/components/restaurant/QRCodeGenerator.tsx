@@ -4,22 +4,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Restaurant } from "@/types/tenant";
+import { Location } from "@/types/tenant"; // Alterado para Location
 import { Download, Copy, RefreshCw, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import QRCode from "qrcode";
 
 interface QRCodeGeneratorProps {
-  restaurant: Restaurant;
+  location: Location; // Alterado para location
 }
 
-const QRCodeGenerator = ({ restaurant }: QRCodeGeneratorProps) => {
+const QRCodeGenerator = ({ location }: QRCodeGeneratorProps) => { // Alterado para location
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const [customMessage, setCustomMessage] = useState("Deixe seu feedback sobre nossa experiência!");
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
-  const feedbackUrl = `${window.location.origin}/feedback/${restaurant.id}`;
+  const feedbackUrl = `${window.location.origin}/feedback/${location.id}`; // Alterado para location.id
 
   const generateQRCode = async () => {
     setIsGenerating(true);
@@ -46,7 +46,7 @@ const QRCodeGenerator = ({ restaurant }: QRCodeGeneratorProps) => {
 
   useEffect(() => {
     generateQRCode();
-  }, [restaurant.id]);
+  }, [location.id]); // Alterado para location.id
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -68,7 +68,7 @@ const QRCodeGenerator = ({ restaurant }: QRCodeGeneratorProps) => {
     if (!qrCodeUrl) return;
     
     const link = document.createElement('a');
-    link.download = `qrcode-${restaurant.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+    link.download = `qrcode-${location.name.toLowerCase().replace(/\s+/g, '-')}.png`; // Alterado para location.name
     link.href = qrCodeUrl;
     link.click();
     
@@ -86,7 +86,7 @@ const QRCodeGenerator = ({ restaurant }: QRCodeGeneratorProps) => {
           <CardTitle className="flex items-center gap-2">
             <span>QR Code de Feedback</span>
             <Badge variant="outline" className="text-xs">
-              {restaurant.name}
+              {location.name}
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -183,19 +183,19 @@ const QRCodeGenerator = ({ restaurant }: QRCodeGeneratorProps) => {
           </div>
 
           <div className="space-y-3">
-            <Label>Informações do Restaurante</Label>
+            <Label>Informações da Localização</Label> {/* Alterado para Localização */}
             <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Nome:</span>
-                <span className="font-medium">{restaurant.name}</span>
+                <span className="font-medium">{location.name}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Endereço:</span>
-                <span className="font-medium text-right max-w-[200px]">{restaurant.address}</span>
+                <span className="font-medium text-right max-w-[200px]">{location.address}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Telefone:</span>
-                <span className="font-medium">{restaurant.phone}</span>
+                <span className="font-medium">{location.phone}</span>
               </div>
             </div>
           </div>
