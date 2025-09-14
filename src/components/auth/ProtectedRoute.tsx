@@ -24,25 +24,14 @@ export const ProtectedRoute = ({
   fallbackPath = '/login',
   showUnauthorized = true
 }: ProtectedRouteProps) => {
-  const { user, loading, hasRole, hasPermission } = useAuth();
+  // Todos os hooks devem ser chamados incondicionalmente no nível superior do componente.
+  // O useAuth já lida com a lógica de autenticação mockada internamente.
+  const { user, loading, hasRole, hasPermission } = useAuth(); 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Check for mock auth setting from localStorage
-  const [useMockAuth, setUseMockAuth] = useState(false);
-  useEffect(() => {
-    setUseMockAuth(localStorage.getItem('useMockAuth') === 'true');
-  }, []);
-
-  // If mock auth is enabled, bypass all checks and render children
-  if (useMockAuth) {
-    return <>{children}</>;
-  }
-
-  // State to track authentication timeout
   const [authTimeout, setAuthTimeout] = useState(false);
   
-  // Set a timeout to avoid getting stuck in loading state
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     
@@ -58,7 +47,10 @@ export const ProtectedRoute = ({
     };
   }, [loading]);
 
-  // Show loading spinner while checking authentication
+  // A lógica de renderização condicional vem *depois* de todas as chamadas de hooks.
+  // Se o useAuth estiver em modo mock, 'loading' será falso e 'user' será o MOCK_USER,
+  // então as condições abaixo lidarão corretamente com isso.
+
   if (loading && !authTimeout) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/30">
@@ -74,12 +66,10 @@ export const ProtectedRoute = ({
     );
   }
   
-  // If authentication check times out, redirect to login
   if (authTimeout) {
     return <Navigate to={fallbackPath} state={{ from: location.pathname }} replace />;
   }
 
-  // Check if authentication is required but user is not logged in
   if (requireAuth && !user) {
     return (
       <Navigate 
@@ -90,7 +80,7 @@ export const ProtectedRoute = ({
     );
   }
 
-  // Check role requirement
+  // Verifica o requisito de role
   if (requiredRole && user && !hasRole(requiredRole)) {
     if (!showUnauthorized) {
       return <Navigate to="/dashboard" replace />;
@@ -134,7 +124,7 @@ export const ProtectedRoute = ({
     );
   }
 
-  // Check permission requirement
+  // Verifica o requisito de permissão
   if (requiredPermission && user && !hasPermission(requiredPermission)) {
     if (!showUnauthorized) {
       return <Navigate to="/dashboard" replace />;
@@ -178,11 +168,11 @@ export const ProtectedRoute = ({
     );
   }
 
-  // All checks passed, render the protected content
+  // Todas as verificações passaram, renderiza o conteúdo protegido
   return <>{children}</>;
 };
 
-// Convenience components for common use cases
+// Componentes de conveniência para casos de uso comuns
 export const AdminRoute = ({ children }: { children: ReactNode }) => (
   <ProtectedRoute requiredRole="admin">
     {children}
@@ -201,7 +191,7 @@ export const OwnerRoute = ({ children }: { children: ReactNode }) => (
   </ProtectedRoute>
 );
 
-// Permission-based route protection
+// Proteção de rota baseada em permissão
 export const PermissionRoute = ({ 
   children, 
   permission 
