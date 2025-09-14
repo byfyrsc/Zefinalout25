@@ -3,7 +3,7 @@ export interface Tenant {
   name: string;
   email: string;
   logo?: string;
-  plan: 'starter' | 'professional' | 'enterprise';
+  plan: 'starter' | 'professional' | 'enterprise' | 'enterprise_plus'; // Adicionado 'enterprise_plus'
   createdAt: string;
   isActive: boolean;
 }
