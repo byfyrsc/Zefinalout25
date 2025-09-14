@@ -1,14 +1,15 @@
 import { BrowserRouter } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useEffect } from "react"; // Importar useEffect
+import { useEffect } from "react";
 
 import { DevHelper } from "@/components/DevHelper";
 import { AppProviders } from "@/components/AppProviders";
 import { AppRoutes } from "@/routes";
-import { useUIStore } from "@/stores/uiStore"; // Importar useUIStore
+import { useUIStore } from "@/stores/uiStore";
+import { PWAInstallPrompt } from "@/components/performance/PWAInstallPrompt"; // Importar PWAInstallPrompt
 
 const App = () => {
-  const { isDarkMode } = useUIStore(); // Obter o estado isDarkMode
+  const { isDarkMode } = useUIStore();
 
   useEffect(() => {
     if (isDarkMode) {
@@ -28,6 +29,7 @@ const App = () => {
         <BrowserRouter>
           <AppRoutes />
           <DevHelper />
+          <PWAInstallPrompt /> {/* Renderizar o PWAInstallPrompt aqui */}
         </BrowserRouter>
       </AppProviders>
     </motion.div>
