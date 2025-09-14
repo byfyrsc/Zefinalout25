@@ -443,8 +443,31 @@ export class FeedbackService {
     dateFrom?: string,
     dateTo?: string
   ): Promise<NPSMetrics> {
-    // REMOVIDO: Mock data fallback para desenvolvimento
-    // if (env.VITE_USE_MOCK_DATA) { ... }
+    // Mock data fallback for development
+    if (env.VITE_USE_MOCK_DATA) {
+      return {
+        id: `mock-nps_${Date.now()}`,
+        tenant_id: tenantId,
+        location_id: locationId,
+        period_start: dateFrom || new Date().toISOString(),
+        period_end: dateTo || new Date().toISOString(),
+        total_responses: 150,
+        promoters: 90,
+        passives: 30,
+        detractors: 30,
+        nps_score: 40, // (90-30)/150 * 100 = 40
+        previous_nps_score: 35,
+        trend: 'up',
+        segments: [
+          { segment_name: 'Comida', segment_value: 'Excelente', nps_score: 60, response_count: 50 },
+          { segment_name: 'Atendimento', segment_value: 'Bom', nps_score: 30, response_count: 70 },
+          { segment_name: 'Ambiente', segment_value: 'Regular', nps_score: 10, response_count: 30 },
+        ],
+        benchmark_score: 60,
+        industry_average: 45,
+        created_at: new Date().toISOString(),
+      };
+    }
 
     try {
       let query = supabase
@@ -522,8 +545,65 @@ export class FeedbackService {
   static async getFeedbackAnalytics(
     request: FeedbackAnalyticsRequest
   ): Promise<FeedbackAnalyticsResponse> {
-    // REMOVIDO: Mock data fallback para desenvolvimento
-    // if (env.VITE_USE_MOCK_DATA) { ... }
+    // Mock data fallback for development
+    if (env.VITE_USE_MOCK_DATA) {
+      return {
+        summary: {
+          total_responses: 200,
+          average_nps: 45,
+          sentiment_breakdown: {
+            positive: 60,
+            neutral: 25,
+            negative: 15,
+          },
+          completion_rate: 85,
+          response_trend: [
+            { date: '2024-01-01', count: 10 },
+            { date: '2024-01-02', count: 15 },
+            { date: '2024-01-03', count: 20 },
+            { date: '2024-01-04', count: 12 },
+            { date: '2024-01-05', count: 18 },
+          ],
+        },
+        segments: [
+          { segment_name: 'Comida', segment_value: 'Excelente', metrics: { nps: 60 } },
+          { segment_name: 'Atendimento', segment_value: 'Bom', metrics: { nps: 30 } },
+        ],
+        insights: [
+          {
+            id: 'insight-1',
+            tenant_id: request.tenant_id,
+            type: 'trend',
+            title: 'Aumento de feedbacks positivos sobre comida',
+            description: 'Observamos um aumento de 15% nos feedbacks positivos relacionados à qualidade da comida na última semana.',
+            severity: 'low',
+            confidence: 0.9,
+            data_points: [],
+            action_items: ['Manter a qualidade dos ingredientes', 'Destacar pratos bem avaliados no menu'],
+            is_read: false,
+            created_at: new Date().toISOString(),
+          },
+          {
+            id: 'insight-2',
+            tenant_id: request.tenant_id,
+            type: 'risk',
+            title: 'Queda na satisfação do atendimento noturno',
+            description: 'Houve uma queda de 10 pontos no NPS para o período noturno, com menções a tempo de espera.',
+            severity: 'high',
+            confidence: 0.85,
+            data_points: [],
+            action_items: ['Revisar escala de funcionários no período noturno', 'Treinar equipe em gestão de filas'],
+            is_read: false,
+            created_at: new Date().toISOString(),
+          },
+        ],
+        benchmarks: {
+          industry_nps: 50,
+          industry_sentiment: { positive: 60, neutral: 25, negative: 15 },
+          peer_comparison: {},
+        },
+      };
+    }
 
     try {
       // This is a simplified implementation
