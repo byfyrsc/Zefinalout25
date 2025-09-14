@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/layout/Sidebar";
 import { Header } from "../components/layout/Header";
-import { cn } "@/lib/utils";
+import { cn } from "@/lib/utils"; // Correção: Adicionado 'from'
 import { useTenant } from "@/contexts/TenantContext";
 import { useResponsive } from "@/hooks/useResponsive";
 import { PageTransition } from "@/components/ui/micro-interactions";
