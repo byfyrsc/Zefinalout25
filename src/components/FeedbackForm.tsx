@@ -17,8 +17,12 @@ import {
   DollarSign,
   Users,
   MapPin,
-  ArrowRight
+  ArrowRight,
+  WifiOff
 } from "lucide-react";
+import { useOfflineSync } from "@/hooks/useOfflineSync"; // Import useOfflineSync
+import { useTenant } from "@/contexts/TenantContext"; // Import useTenant
+import { SubmitResponseRequest, SurveyAnswer } from "@/types/feedback"; // Import types
 
 const FeedbackForm = () => {
   const [step, setStep] = useState(1);
@@ -34,6 +38,9 @@ const FeedbackForm = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
+  const { addOfflineAction, isOnline } = useOfflineSync(); // Use the hook
+  const { currentLocation } = useTenant(); // Get current location
+
   const totalSteps = 4;
 
   const handleNext = () => {
@@ -48,8 +55,65 @@ const FeedbackForm = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!currentLocation) {
+      console.error("No current location selected for feedback submission.");
+      return;
+    }
+
+    // Mock survey ID for now, in a real app this would come from a specific survey
+    const mockSurveyId = "mock-survey-id-123"; 
+
+    const answers: SurveyAnswer[] = [
+      {
+        question_id: "q_overall_rating",
+        question_type: "rating",
+        value: rating,
+        numeric_value: rating,
+      },
+      {
+        question_id: "q_sentiment",
+        question_type: "multiple_choice",
+        value: sentiment,
+        text_value: sentiment,
+      },
+      {
+        question_id: "q_categories",
+        question_type: "checkbox",
+        value: selectedCategories,
+        option_ids: selectedCategories, // Assuming category labels are also option IDs
+      },
+      {
+        question_id: "q_visit_type",
+        question_type: "multiple_choice",
+        value: visitType,
+        text_value: visitType,
+      },
+      {
+        question_id: "q_comment",
+        question_type: "textarea",
+        value: comment,
+        text_value: comment,
+      },
+    ];
+
+    const submitRequest: SubmitResponseRequest = {
+      survey_id: mockSurveyId,
+      answers: answers,
+      customer_data: {
+        name: customerInfo.name,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+        metadata: {
+          location_id: currentLocation.id, // Ensure location ID is passed
+        }
+      },
+    };
+
+    addOfflineAction({ type: 'feedback', data: submitRequest });
+
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
@@ -81,6 +145,12 @@ const FeedbackForm = () => {
             </div>
             <h3 className="text-xl font-semibold mb-2">Feedback Enviado!</h3>
             <p className="text-muted-foreground mb-4">Obrigado por compartilhar sua experiência conosco.</p>
+            {!isOnline && (
+              <Badge variant="warning" className="mb-2 flex items-center justify-center gap-2">
+                <WifiOff className="h-4 w-4" />
+                Salvo offline, será enviado quando você estiver online.
+              </Badge>
+            )}
             <Badge variant="secondary" className="mb-2">
               Análise de sentimento: {sentiment || "Processando..."}
             </Badge>

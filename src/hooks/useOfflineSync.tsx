@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { feedbackService } from '@/lib/supabase-services'; // Import feedbackService
+import { SubmitResponseRequest } from '@/types/feedback'; // Import SubmitResponseRequest
+import { toast } from 'sonner'; // Import sonner for notifications
 
 interface OfflineAction {
   id: string;
-  type: 'feedback' | 'rating' | 'survey';
-  data: any;
+  type: 'feedback' | 'rating' | 'survey'; // 'survey' type will now hold SubmitResponseRequest
+  data: SubmitResponseRequest; // Data will be a SubmitResponseRequest for feedback/survey
   timestamp: number;
   retryCount: number;
 }
@@ -25,11 +28,13 @@ export const useOfflineSync = () => {
     // Listen for online/offline events
     const handleOnline = () => {
       setIsOnline(true);
+      toast.success('Você está online novamente!', { description: 'Tentando sincronizar dados pendentes.' });
       syncPendingActions();
     };
 
     const handleOffline = () => {
       setIsOnline(false);
+      toast.warning('Você está offline.', { description: 'Os dados serão sincronizados automaticamente quando a conexão for restaurada.' });
     };
 
     window.addEventListener('online', handleOnline);
@@ -59,6 +64,10 @@ export const useOfflineSync = () => {
     const updatedActions = [...pendingActions, newAction];
     setPendingActions(updatedActions);
     localStorage.setItem('offline-actions', JSON.stringify(updatedActions));
+    
+    if (!isOnline) {
+      toast.info('Feedback salvo offline.', { description: 'Será enviado quando você estiver online.' });
+    }
 
     return newAction.id;
   };
@@ -67,6 +76,7 @@ export const useOfflineSync = () => {
     if (!isOnline || pendingActions.length === 0 || isSyncing) return;
 
     setIsSyncing(true);
+    toast.loading('Sincronizando dados pendentes...', { id: 'offline-sync' });
 
     try {
       const successful: string[] = [];
@@ -78,8 +88,10 @@ export const useOfflineSync = () => {
           successful.push(action.id);
         } catch (error) {
           console.error('Failed to sync action:', action.id, error);
-          if (action.retryCount < 3) {
+          if (action.retryCount < 3) { // Retry up to 3 times
             failed.push({ ...action, retryCount: action.retryCount + 1 });
+          } else {
+            toast.error(`Falha ao sincronizar feedback: ${action.id}`, { description: 'Tentativas esgotadas.' });
           }
         }
       }
@@ -91,29 +103,32 @@ export const useOfflineSync = () => {
 
       // Invalidate relevant queries to refresh data
       if (successful.length > 0) {
-        queryClient.invalidateQueries({ queryKey: ['feedback'] });
+        queryClient.invalidateQueries({ queryKey: ['feedbacks'] });
         queryClient.invalidateQueries({ queryKey: ['analytics'] });
+        queryClient.invalidateQueries({ queryKey: ['surveys'] });
+        toast.success(`${successful.length} feedback(s) sincronizado(s)!`, { id: 'offline-sync' });
+      } else {
+        toast.dismiss('offline-sync');
       }
 
     } finally {
       setIsSyncing(false);
+      if (pendingActions.length === 0) {
+        toast.dismiss('offline-sync');
+      }
     }
   };
 
   const processOfflineAction = async (action: OfflineAction) => {
-    // Simulate API calls based on action type
     switch (action.type) {
       case 'feedback':
-        // await submitFeedback(action.data);
-        await new Promise(resolve => setTimeout(resolve, 500));
+      case 'survey': // Assuming 'survey' type also uses SubmitResponseRequest
+        await feedbackService.submitResponse(action.data);
         break;
       case 'rating':
-        // await submitRating(action.data);
-        await new Promise(resolve => setTimeout(resolve, 300));
-        break;
-      case 'survey':
-        // await submitSurvey(action.data);
-        await new Promise(resolve => setTimeout(resolve, 800));
+        // Implement rating submission if needed, or merge into feedback/survey
+        // For now, we'll assume ratings are part of a feedback/survey submission
+        console.warn('Rating action type not fully implemented for direct submission.');
         break;
       default:
         throw new Error(`Unknown action type: ${action.type}`);
@@ -123,6 +138,7 @@ export const useOfflineSync = () => {
   const clearPendingActions = () => {
     setPendingActions([]);
     localStorage.removeItem('offline-actions');
+    toast.info('Ações pendentes limpas.');
   };
 
   return {
