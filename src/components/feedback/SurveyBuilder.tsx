@@ -35,6 +35,7 @@ import {
   Sliders,
   MessageSquare,
   Target,
+  X,
 } from 'lucide-react';
 import type {
   Survey,
@@ -269,9 +270,18 @@ export const SurveyBuilder = ({ survey: initialSurvey, onSave, onPreview }: Surv
       order: questions.length,
       is_required: false,
       settings: {},
+      validation: { required: false }, // Initialize validation
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
+
+    // Initialize specific settings based on type
+    if (type === 'rating' || type === 'nps') {
+      newQuestion.settings.scale_min = 0;
+      newQuestion.settings.scale_max = type === 'rating' ? 5 : 10;
+    } else if (['multiple_choice', 'checkbox', 'dropdown'].includes(type)) {
+      newQuestion.options = [{ id: `option_${Date.now()}_1`, label: 'Opção 1', value: 'option_1' }];
+    }
 
     updateSurvey({ questions: [...questions, newQuestion] });
     setEditingQuestion(newQuestion);
@@ -313,6 +323,36 @@ export const SurveyBuilder = ({ survey: initialSurvey, onSave, onPreview }: Surv
     if (onPreview) {
       onPreview(builderState.survey);
     }
+  };
+
+  const handleOptionChange = (optionId: string, newLabel: string) => {
+    if (!editingQuestion || !editingQuestion.options) return;
+    const updatedOptions = editingQuestion.options.map(opt =>
+      opt.id === optionId ? { ...opt, label: newLabel, value: newLabel.toLowerCase().replace(/\s/g, '_') } : opt
+    );
+    const updatedQuestion = { ...editingQuestion, options: updatedOptions };
+    setEditingQuestion(updatedQuestion);
+    updateQuestion(updatedQuestion);
+  };
+
+  const handleAddOption = () => {
+    if (!editingQuestion || !editingQuestion.options) return;
+    const newOption: QuestionOption = {
+      id: `option_${Date.now()}_${editingQuestion.options.length + 1}`,
+      label: `Nova Opção ${editingQuestion.options.length + 1}`,
+      value: `new_option_${editingQuestion.options.length + 1}`,
+    };
+    const updatedQuestion = { ...editingQuestion, options: [...editingQuestion.options, newOption] };
+    setEditingQuestion(updatedQuestion);
+    updateQuestion(updatedQuestion);
+  };
+
+  const handleRemoveOption = (optionId: string) => {
+    if (!editingQuestion || !editingQuestion.options) return;
+    const updatedOptions = editingQuestion.options.filter(opt => opt.id !== optionId);
+    const updatedQuestion = { ...editingQuestion, options: updatedOptions };
+    setEditingQuestion(updatedQuestion);
+    updateQuestion(updatedQuestion);
   };
 
   return (
@@ -413,7 +453,7 @@ export const SurveyBuilder = ({ survey: initialSurvey, onSave, onPreview }: Surv
                 size="sm"
                 onClick={() => setShowQuestionTypes(false)}
               >
-                ×
+                <X className="h-4 w-4" />
               </Button>
             </div>
           </div>
@@ -434,12 +474,11 @@ export const SurveyBuilder = ({ survey: initialSurvey, onSave, onPreview }: Surv
                 size="sm"
                 onClick={() => setEditingQuestion(null)}
               >
-                ×
+                <X className="h-4 w-4" />
               </Button>
             </div>
           </div>
           <ScrollArea className="h-full p-4">
-            {/* Question editor form would go here */}
             <div className="space-y-4">
               <div>
                 <Label htmlFor="question-title">Título da Pergunta</Label>
@@ -481,6 +520,86 @@ export const SurveyBuilder = ({ survey: initialSurvey, onSave, onPreview }: Surv
                 />
                 <Label htmlFor="required">Pergunta obrigatória</Label>
               </div>
+
+              {/* Conditional fields based on question type */}
+              {(editingQuestion.type === 'rating' || editingQuestion.type === 'nps') && (
+                <div className="space-y-2">
+                  <Label htmlFor="scale-max">Escala Máxima</Label>
+                  <Input
+                    id="scale-max"
+                    type="number"
+                    value={editingQuestion.settings?.scale_max || (editingQuestion.type === 'rating' ? 5 : 10)}
+                    onChange={(e) => {
+                      const updatedSettings = { ...editingQuestion.settings, scale_max: parseInt(e.target.value) };
+                      const updated = { ...editingQuestion, settings: updatedSettings };
+                      setEditingQuestion(updated);
+                      updateQuestion(updated);
+                    }}
+                    min={1}
+                    max={10}
+                  />
+                </div>
+              )}
+
+              {editingQuestion.type === 'number' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="min-value">Valor Mínimo</Label>
+                    <Input
+                      id="min-value"
+                      type="number"
+                      value={editingQuestion.validation?.min_value || ''}
+                      onChange={(e) => {
+                        const updatedValidation = { ...editingQuestion.validation, min_value: parseInt(e.target.value) };
+                        const updated = { ...editingQuestion, validation: updatedValidation };
+                        setEditingQuestion(updated);
+                        updateQuestion(updated);
+                      }}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="max-value">Valor Máximo</Label>
+                    <Input
+                      id="max-value"
+                      type="number"
+                      value={editingQuestion.validation?.max_value || ''}
+                      onChange={(e) => {
+                        const updatedValidation = { ...editingQuestion.validation, max_value: parseInt(e.target.value) };
+                        const updated = { ...editingQuestion, validation: updatedValidation };
+                        setEditingQuestion(updated);
+                        updateQuestion(updated);
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {['multiple_choice', 'checkbox', 'dropdown'].includes(editingQuestion.type) && (
+                <div className="space-y-3">
+                  <Label>Opções</Label>
+                  {editingQuestion.options?.map((option, index) => (
+                    <div key={option.id} className="flex items-center space-x-2">
+                      <Input
+                        value={option.label}
+                        onChange={(e) => handleOptionChange(option.id, e.target.value)}
+                        placeholder={`Opção ${index + 1}`}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemoveOption(option.id)}
+                        disabled={editingQuestion.options!.length <= 1}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button variant="outline" size="sm" onClick={handleAddOption} className="w-full">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Adicionar Opção
+                  </Button>
+                </div>
+              )}
             </div>
           </ScrollArea>
         </div>
