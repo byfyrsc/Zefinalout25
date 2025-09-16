@@ -97,7 +97,7 @@ export const PricingPlans = ({ onPlanSelect }: PricingPlansProps) => {
                     <Icon className="h-7 w-7 text-primary" />
                 </div>
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                <CardDescription>{plan.description}</CardDescription>
+                <CardDescription>{plan.description}</CardDescription> {/* Use plan.description */}
               </CardHeader>
               
               <CardContent className="flex-1 flex flex-col justify-between">
@@ -118,7 +118,7 @@ export const PricingPlans = ({ onPlanSelect }: PricingPlansProps) => {
                         )}
                     </div>
                     <ul className="space-y-3 text-sm">
-                        {plan.features.map((feature, index) => (
+                        {plan.features.map((feature, index) => ( // Iterate over features array
                             <li key={index} className="flex items-center gap-3">
                                 <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
                                 <span className="text-muted-foreground">{feature}</span>
