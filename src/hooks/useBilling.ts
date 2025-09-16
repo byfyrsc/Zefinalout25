@@ -12,7 +12,7 @@ import type {
   UpdateSubscriptionRequest,
   CancelSubscriptionRequest,
 } from '@/types/billing';
-import { SubscriptionPlan } from '@/lib/stripe';
+import { SubscriptionPlan, getUsageLimit } from '@/lib/stripe'; // Import getUsageLimit
 
 export const useBilling = () => {
   const { user } = useAuth();
@@ -57,7 +57,53 @@ export const useBilling = () => {
     isLoading: isUsageLoading,
   } = useQuery({
     queryKey: ['usage', tenantId],
-    queryFn: () => BillingService.getCurrentUsage(tenantId!),
+    queryFn: async () => {
+      if (!tenantId) return null;
+      const billingInfoData = await BillingService.getBillingInfo(tenantId);
+      if (!billingInfoData) return null;
+
+      const currentPeriodStart = new Date(billingInfoData.current_period_start);
+      const currentPeriodEnd = new Date(billingInfoData.current_period_end);
+
+      // Get usage records for current billing period
+      const { data: usageRecords } = await supabase
+        .from('usage_records')
+        .select('metric_type, quantity')
+        .eq('tenant_id', tenantId)
+        .gte('timestamp', currentPeriodStart.toISOString())
+        .lte('timestamp', currentPeriodEnd.toISOString());
+
+      // Calculate current usage
+      const usage = {
+        feedbacks_used: 0,
+        locations_used: 0,
+        campaigns_used: 0,
+        sms_sent: 0,
+        emails_sent: 0,
+      };
+
+      usageRecords?.forEach(record => {
+        if (record.metric_type in usage) {
+          usage[record.metric_type as keyof typeof usage] += record.quantity;
+        }
+      });
+
+      return {
+        tenant_id: tenantId,
+        plan_id: billingInfoData.plan_id,
+        current_period: {
+          ...usage,
+          feedbacks_limit: getUsageLimit(billingInfoData.plan_id, 'feedbacks'),
+          locations_limit: getUsageLimit(billingInfoData.plan_id, 'locations'),
+          campaigns_limit: getUsageLimit(billingInfoData.plan_id, 'campaigns'),
+        },
+        overage_charges: {
+          feedbacks: 0, // Calculate based on overage pricing
+          sms: 0,
+          emails: 0,
+        },
+      };
+    },
     enabled: !!tenantId,
     refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
   });

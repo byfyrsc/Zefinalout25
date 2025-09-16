@@ -9,7 +9,7 @@ import { SUBSCRIPTION_PLANS, formatPrice } from '@/lib/stripe';
 import { PricingPlans } from './PricingPlans';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CreditCard, Download, Settings, AlertTriangle, Clock, RefreshCw, CheckCircle, ExternalLink } from 'lucide-react';
+import { CreditCard, Download, Settings, AlertTriangle, Clock, RefreshCw, CheckCircle, ExternalLink, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const statusInfo = {
@@ -22,8 +22,8 @@ const statusInfo = {
 };
 
 const UsageBar = ({ title, used, limit }) => {
-    const percentage = limit > 0 ? (used / limit) * 100 : 0;
-    const isUnlimited = limit === Infinity;
+    const isUnlimited = limit === 'unlimited';
+    const percentage = isUnlimited || limit === 0 ? 0 : (used / limit) * 100;
 
     return (
         <div>
@@ -32,9 +32,11 @@ const UsageBar = ({ title, used, limit }) => {
                 <p className="text-sm text-foreground">
                     <span className="font-bold">{used}</span>
                     {!isUnlimited && <span className="text-muted-foreground"> / {limit}</span>}
+                    {isUnlimited && <span className="text-muted-foreground"> / Ilimitado</span>}
                 </p>
             </div>
             {!isUnlimited && <Progress value={percentage} />}
+            {isUnlimited && <Progress value={100} className="bg-green-500/20" indicatorClassName="bg-green-500" />}
         </div>
     );
 };
@@ -148,12 +150,12 @@ export const BillingDashboard = () => {
             <Card className="lg:col-span-2">
                 <CardHeader>
                     <CardTitle>Uso Atual</CardTitle>
-                    <CardDescription>Seu consumo no período atual. O ciclo renova em {new Date(billingInfo?.current_period_end).toLocaleDateString('pt-BR')}.</CardDescription>
+                    <CardDescription>Seu consumo no período atual. O ciclo renova em {billingInfo?.current_period_end ? new Date(billingInfo.current_period_end).toLocaleDateString('pt-BR') : 'N/A'}.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                    <UsageBar title="Feedbacks" used={currentUsage?.feedbacks_used || 0} limit={currentPlan?.usage.feedbacks_limit || 0} />
-                    <UsageBar title="Campanhas" used={currentUsage?.campaigns_used || 0} limit={currentPlan?.usage.campaigns_limit || 0} />
-                    <UsageBar title="Localizações" used={currentUsage?.locations_used || 0} limit={currentPlan?.usage.locations_limit || 0} />
+                    <UsageBar title="Feedbacks" used={currentUsage?.current_period.feedbacks_used || 0} limit={currentUsage?.current_period.feedbacks_limit || 0} />
+                    <UsageBar title="Campanhas" used={currentUsage?.current_period.campaigns_used || 0} limit={currentUsage?.current_period.campaigns_limit || 0} />
+                    <UsageBar title="Localizações" used={currentUsage?.current_period.locations_used || 0} limit={currentUsage?.current_period.locations_limit || 0} />
                 </CardContent>
             </Card>
         </div>

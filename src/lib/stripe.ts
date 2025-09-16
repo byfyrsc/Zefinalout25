@@ -145,20 +145,32 @@ export const getPlanFeatures = (planId: SubscriptionPlan) => {
 
 export const canAccessFeature = (userPlan: SubscriptionPlan, feature: string) => {
   const planFeatures = getPlanFeatures(userPlan);
-  // This function needs to be updated if features are now string arrays
-  // For now, it will check if the feature string exists in the array
   return Array.isArray(planFeatures) && planFeatures.includes(feature);
 };
 
-export const getUsageLimit = (userPlan: SubscriptionPlan, limitType: string) => {
-  // This function needs to be updated if features are now string arrays
-  // For now, it will return 'unlimited' or a mock value
-  const planFeatures = getPlanFeatures(userPlan);
-  if (Array.isArray(planFeatures)) {
-    const limitFeature = planFeatures.find(f => f.toLowerCase().includes(limitType.toLowerCase()));
-    if (limitFeature?.includes('ilimitado')) return 'unlimited';
-    const match = limitFeature?.match(/\d+/);
-    return match ? parseInt(match[0]) : 'unlimited';
+export const getUsageLimit = (userPlan: SubscriptionPlan, limitType: 'feedbacks' | 'locations' | 'campaigns') => {
+  const features = SUBSCRIPTION_PLANS[userPlan].features;
+  
+  let featureString: string | undefined;
+
+  switch (limitType) {
+    case 'feedbacks':
+      featureString = features.find(f => f.includes('feedbacks/mês') || f.includes('Feedbacks ilimitados'));
+      break;
+    case 'locations':
+      featureString = features.find(f => f.includes('localização') || f.includes('localizações') || f.includes('Localizações ilimitadas'));
+      break;
+    case 'campaigns':
+      featureString = features.find(f => f.includes('Campanhas') || f.includes('Campanhas ilimitadas'));
+      break;
+    default:
+      return 'unlimited';
   }
-  return 'unlimited';
+
+  if (featureString?.includes('ilimitado')) {
+    return 'unlimited';
+  }
+
+  const match = featureString?.match(/\d+/);
+  return match ? parseInt(match[0]) : 'unlimited';
 };
