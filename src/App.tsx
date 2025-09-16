@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 import { DevHelper } from "@/components/DevHelper";
 import { AppProviders } from "@/components/AppProviders";
@@ -27,7 +28,15 @@ const App = () => {
     >
       <AppProviders>
         <BrowserRouter>
-          <AppRoutes />
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin" />
+              </div>
+            }
+          >
+            <AppRoutes />
+          </Suspense>
           <DevHelper />
           <PWAInstallPrompt /> {/* Renderizar o PWAInstallPrompt aqui */}
         </BrowserRouter>

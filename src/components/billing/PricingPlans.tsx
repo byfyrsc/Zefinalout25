@@ -17,6 +17,7 @@ const planIcons = {
   starter: Star,
   professional: Zap,
   enterprise: Crown,
+  enterprise_plus: Sparkles, // Added icon for enterprise_plus
 };
 
 export const PricingPlans = ({ onPlanSelect }: PricingPlansProps) => {
@@ -30,8 +31,8 @@ export const PricingPlans = ({ onPlanSelect }: PricingPlansProps) => {
       return;
     }
 
-    if (planId === 'enterprise') {
-      window.open('mailto:vendas@digaze.com?subject=Contato Plano Enterprise', '_blank');
+    if (planId === 'enterprise_plus') { // Changed from 'enterprise' to 'enterprise_plus' for sales contact
+      window.open('mailto:vendas@digaze.com?subject=Contato Plano Enterprise+', '_blank');
       return;
     }
 
@@ -45,7 +46,7 @@ export const PricingPlans = ({ onPlanSelect }: PricingPlansProps) => {
     if (currentPlan?.id === planId) return 'Plano Atual';
     if (canUpgradeTo(planId)) return 'Fazer Upgrade';
     if (canDowngradeTo(planId)) return 'Fazer Downgrade';
-    if (planId === 'enterprise') return 'Falar com Vendas';
+    if (planId === 'enterprise_plus') return 'Falar com Vendas'; // Changed to enterprise_plus
     return 'Começar Agora';
   };
 
@@ -70,7 +71,11 @@ export const PricingPlans = ({ onPlanSelect }: PricingPlansProps) => {
           const Icon = planIcons[planId as SubscriptionPlan] || Sparkles;
           const isPopular = planId === 'professional';
           const isCurrent = currentPlan?.id === planId;
-          const price = isAnnual ? plan.prices.annual : plan.prices.monthly;
+          
+          // Safely access prices, handling null for enterprise_plus
+          const monthlyPrice = plan.prices?.monthly;
+          const annualPrice = plan.prices?.annual;
+          const price = isAnnual ? annualPrice : monthlyPrice;
 
           return (
             <Card 
@@ -98,13 +103,13 @@ export const PricingPlans = ({ onPlanSelect }: PricingPlansProps) => {
               <CardContent className="flex-1 flex flex-col justify-between">
                 <div className="space-y-6">
                     <div className="text-center">
-                        {price ? (
+                        {price !== null ? ( // Check if price is not null
                         <>
                             <span className="text-4xl font-bold">{formatPrice(price)}</span>
                             <span className="text-muted-foreground">/{isAnnual ? 'ano' : 'mês'}</span>
-                            {isAnnual && plan.prices.monthly && (
+                            {isAnnual && monthlyPrice !== null && ( // Check monthlyPrice for null
                                 <p className="text-sm text-muted-foreground line-through mt-1">
-                                    {formatPrice(plan.prices.monthly * 12)}/ano no plano mensal
+                                    {formatPrice(monthlyPrice * 12)}/ano no plano mensal
                                 </p>
                             )}
                         </>

@@ -37,7 +37,10 @@ export const SUBSCRIPTION_PLANS = {
   starter: {
     id: 'starter',
     name: 'Starter',
-    price: 9700, // R$ 97.00 in cents
+    prices: {
+      monthly: 9700, // R$ 97.00 in cents
+      annual: 9700 * 10, // 10 months equivalent for annual discount
+    },
     currency: 'brl',
     interval: 'month',
     features: {
@@ -56,7 +59,10 @@ export const SUBSCRIPTION_PLANS = {
   professional: {
     id: 'professional',
     name: 'Professional',
-    price: 29700, // R$ 297.00 in cents
+    prices: {
+      monthly: 29700, // R$ 297.00 in cents
+      annual: 29700 * 10, // 10 months equivalent for annual discount
+    },
     currency: 'brl',
     interval: 'month',
     features: {
@@ -77,7 +83,10 @@ export const SUBSCRIPTION_PLANS = {
   enterprise: {
     id: 'enterprise',
     name: 'Enterprise',
-    price: 59700, // R$ 597.00 in cents
+    prices: {
+      monthly: 59700, // R$ 597.00 in cents
+      annual: 59700 * 10, // 10 months equivalent for annual discount
+    },
     currency: 'brl',
     interval: 'month',
     features: {
@@ -101,7 +110,10 @@ export const SUBSCRIPTION_PLANS = {
   enterprise_plus: {
     id: 'enterprise_plus',
     name: 'Enterprise+',
-    price: null, // Custom pricing
+    prices: {
+      monthly: null, // Custom pricing
+      annual: null, // Custom pricing
+    },
     currency: 'brl',
     interval: 'month',
     features: {

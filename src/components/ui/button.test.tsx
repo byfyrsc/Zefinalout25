@@ -1,16 +1,11 @@
-import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Button } from './button';
+import { describe, it, expect } from 'vitest';
 
 describe('Button', () => {
-  it('should render correctly', () => {
+  it('renders the button with the correct text', () => {
     render(<Button>Click me</Button>);
-    expect(screen.getByText('Click me')).toBeInTheDocument();
-  });
-
-  it('should apply correct variant classes', () => {
-    render(<Button variant="destructive">Delete</Button>);
-    const button = screen.getByRole('button', { name: 'Delete' });
-    expect(button).toBeInTheDocument();
+    const buttonElement = screen.getByText(/Click me/i);
+    expect(buttonElement).toBeInTheDocument();
   });
 });

@@ -60,14 +60,36 @@ export const protectedRoutes = [
       { path: "gamification", element: <GamificationPage /> },
       { path: "communication", element: <CommunicationPage /> },
       { path: "reports", element: <ReportsPage /> },
-      { path: "billing", element: <BillingPage /> },
-      { path: "billing/success", element: <BillingSuccessPage /> },
-      { path: "billing/cancel", element: <BillingCancelPage /> },
       { path: "profile", element: <ProfilePage /> },
       { path: "accessibility", element: <AccessibilityPage /> },
       { path: "ai-insights", element: <AIInsightsPage /> },
       { path: "general-analytics", element: <GeneralAnalyticsPage /> },
       { path: "nps-engine", element: <NPSEnginePage /> },
     ],
+  },
+  // Rotas de billing como rotas separadas e protegidas
+  {
+    path: "/billing",
+    element: (
+      <ProtectedRoute>
+        <BillingPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/billing/success",
+    element: (
+      <ProtectedRoute>
+        <BillingSuccessPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/billing/cancel",
+    element: (
+      <ProtectedRoute>
+        <BillingCancelPage />
+      </ProtectedRoute>
+    ),
   },
 ];
