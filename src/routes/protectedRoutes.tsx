@@ -27,7 +27,7 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const AIInsightsPage = lazy(() => import("@/pages/AIInsightsPage"));
 const GeneralAnalyticsPage = lazy(() => import("@/pages/GeneralAnalyticsPage"));
 const NPSEnginePage = lazy(() => import("@/pages/NPSEnginePage"));
-
+const IntegrationsPage = lazy(() => import("@/pages/IntegrationsPage")); // Nova importação
 
 export const protectedRoutes = [
   {
@@ -65,6 +65,7 @@ export const protectedRoutes = [
       { path: "ai-insights", element: <AIInsightsPage /> },
       { path: "general-analytics", element: <GeneralAnalyticsPage /> },
       { path: "nps-engine", element: <NPSEnginePage /> },
+      { path: "integrations", element: <IntegrationsPage /> }, // Nova rota
     ],
   },
   // Rotas de billing como rotas separadas e protegidas

@@ -11,9 +11,10 @@ import {
   Gift,
   Calendar,
   FileText,
-  MessageCircle, // Re-added for communication
-  Brain, // Novo ícone para AI Insights
-  Target, // Novo ícone para NPS Engine
+  MessageCircle,
+  Brain,
+  Target,
+  Plug, // Novo ícone para Integrações
 } from "lucide-react";
 
 export interface NavItem {
@@ -39,6 +40,7 @@ export const mainNavigationItems: NavItem[] = [
   { id: "gamification", label: "Gamification", icon: Users, path: "/gamification" },
   { id: "communication", label: "Communication Hub", icon: MessageCircle, path: "/communication" },
   { id: "reports", label: "Reports", icon: FileText, path: "/reports" },
+  { id: "integrations", label: "Integrations", icon: Plug, path: "/integrations" }, // Novo item de navegação
   { id: "billing", label: "Billing", icon: CreditCard, path: "/billing" },
   { id: "location-settings", label: "Location Settings", icon: Settings, path: "/location-settings", requiresLocation: true }, // Alterado para Location Settings
   { id: "profile", label: "User Profile", icon: Users, path: "/profile" },
