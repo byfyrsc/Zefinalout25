@@ -106,9 +106,9 @@ export const BillingSuccess = () => {
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"
+          className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4"
         >
-          <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </motion.div>
@@ -171,9 +171,9 @@ export const BillingCancel = () => {
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"
+          className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4"
         >
-          <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-8 h-8 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </motion.div>

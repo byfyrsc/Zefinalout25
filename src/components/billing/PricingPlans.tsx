@@ -81,9 +81,9 @@ export const PricingPlans = ({ onPlanSelect }: PricingPlansProps) => {
             <Card 
               key={planId}
               className={cn(
-                'flex flex-col h-full transition-all duration-300 border-2',
-                isPopular ? 'border-primary scale-105 shadow-2xl z-10' : 'border-border',
-                isCurrent && 'border-green-500 bg-green-500/5'
+                'flex flex-col h-full transition-all duration-300 border-2 bg-card',
+                isPopular ? 'border-primary' : 'border-border',
+                isCurrent && 'border-success'
               )}
             >
               {isPopular && (

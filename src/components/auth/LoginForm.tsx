@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Loader2, ShieldAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface LoginFormProps {
@@ -15,7 +15,7 @@ interface LoginFormProps {
 }
 
 export const LoginForm = ({ onToggleMode, redirectTo }: LoginFormProps) => {
-  const { signIn, loading } = useAuth();
+  const { signIn, loading, isRateLimited } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -23,6 +23,18 @@ export const LoginForm = ({ onToggleMode, redirectTo }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showRateLimitMessage, setShowRateLimitMessage] = useState(false);
+
+  // Handle rate limiting display
+  useEffect(() => {
+    if (isRateLimited()) {
+      setShowRateLimitMessage(true);
+      const timer = setTimeout(() => {
+        setShowRateLimitMessage(false);
+      }, 60000); // Show for 1 minute
+      return () => clearTimeout(timer);
+    }
+  }, [isRateLimited]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,9 +72,14 @@ export const LoginForm = ({ onToggleMode, redirectTo }: LoginFormProps) => {
       
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-          {error && (
+          {(error || showRateLimitMessage) && (
             <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription className="flex items-center">
+                <ShieldAlert className="h-4 w-4 mr-2" />
+                {showRateLimitMessage 
+                  ? 'Muitas tentativas de login. Por favor, aguarde antes de tentar novamente.' 
+                  : error}
+              </AlertDescription>
             </Alert>
           )}
           
@@ -78,7 +95,7 @@ export const LoginForm = ({ onToggleMode, redirectTo }: LoginFormProps) => {
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 className="pl-10"
                 required
-                disabled={isSubmitting || loading}
+                disabled={isSubmitting || loading || showRateLimitMessage}
               />
             </div>
           </div>
@@ -95,7 +112,7 @@ export const LoginForm = ({ onToggleMode, redirectTo }: LoginFormProps) => {
                 onChange={(e) => handleInputChange('password', e.target.value)}
                 className="pl-10 pr-10"
                 required
-                disabled={isSubmitting || loading}
+                disabled={isSubmitting || loading || showRateLimitMessage}
               />
               <Button
                 type="button"
@@ -103,7 +120,7 @@ export const LoginForm = ({ onToggleMode, redirectTo }: LoginFormProps) => {
                 size="sm"
                 className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
-                disabled={isSubmitting || loading}
+                disabled={isSubmitting || loading || showRateLimitMessage}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -128,7 +145,7 @@ export const LoginForm = ({ onToggleMode, redirectTo }: LoginFormProps) => {
           <Button 
             type="submit" 
             className="w-full" 
-            disabled={isSubmitting || loading || !formData.email || !formData.password}
+            disabled={isSubmitting || loading || !formData.email || !formData.password || showRateLimitMessage}
           >
             {isSubmitting || loading ? (
               <>

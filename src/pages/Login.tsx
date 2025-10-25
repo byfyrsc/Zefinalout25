@@ -88,7 +88,7 @@ const ProductFeatures = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <Card className="bg-background/70 backdrop-blur-md border-border/30 shadow-soft mt-auto">
+        <Card className="bg-card border-border shadow-soft mt-auto">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <CheckCircle className="h-5 w-5 text-success" />
@@ -157,8 +157,8 @@ export default function Login() {
             transition={{ duration: 0.5 }}
           >
             {isLoginView ? (
-              <Card className="bg-background/75 backdrop-blur-md border-border/30 shadow-soft">
-                <CardHeader className="hidden lg:block">
+              <Card className="bg-card border-border shadow-soft">
+                <CardHeader>
                   <CardTitle className="text-2xl">Bem-vindo de volta!</CardTitle>
                   <CardDescription>Insira seus dados para acessar sua conta.</CardDescription>
                 </CardHeader>

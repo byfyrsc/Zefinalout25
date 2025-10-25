@@ -70,7 +70,7 @@ export function Sidebar({
       {/* Barra lateral */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 bg-card border-r border-border flex flex-col transition-all duration-300 ease-in-out",
+          "fixed inset-y-0 left-0 z-50 w-72 bg-sidebar text-sidebar-foreground border-r border-sidebar-border flex flex-col transition-all duration-300 ease-in-out",
           "lg:translate-x-0 lg:static lg:z-auto",
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
@@ -114,10 +114,10 @@ export function Sidebar({
                     onClick={() => handleNavigation(item)}
                     className={cn(
                       "w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                      "hover:bg-accent hover:text-accent-foreground",
+                      "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                       isActive
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground"
+                        ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                        : "hover:text-foreground"
                     )}
                   >
                     <Icon className="h-5 w-5" />

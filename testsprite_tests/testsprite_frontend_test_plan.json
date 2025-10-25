@@ -1,0 +1,628 @@
+[
+  {
+    "id": "TC001",
+    "title": "User Signup Success",
+    "description": "Verify that a user can successfully sign up with valid credentials and receives a confirmation.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the signup page."
+      },
+      {
+        "type": "action",
+        "description": "Input valid email address, username, and password."
+      },
+      {
+        "type": "action",
+        "description": "Submit the signup form."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm account creation success message is displayed."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is redirected to login page or dashboard according to flow."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "User Login Failure with Incorrect Password",
+    "description": "Ensure login fails when an incorrect password is entered with a valid username/email.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid username/email with incorrect password."
+      },
+      {
+        "type": "action",
+        "description": "Click login button."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm error message indicating invalid credentials is displayed."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that user remains on the login page."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Password Recovery Flow",
+    "description": "Verify that users can initiate password recovery and receive a recovery email.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the password recovery page."
+      },
+      {
+        "type": "action",
+        "description": "Enter registered email address."
+      },
+      {
+        "type": "action",
+        "description": "Submit the password recovery request."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm success message about email sent is displayed."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify email is received with valid reset link."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Multi-Tenant and Restaurant Context Switching",
+    "description": "Verify that user can select different tenants and restaurants, and the views and data update accordingly without data leakage.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login to the application."
+      },
+      {
+        "type": "action",
+        "description": "Select a tenant from tenant selector."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tenant context is updated and UI reflects tenant-specific data."
+      },
+      {
+        "type": "action",
+        "description": "Select a restaurant under the chosen tenant."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify restaurant-specific data is displayed and previous restaurant data is not visible."
+      },
+      {
+        "type": "action",
+        "description": "Switch to a different tenant and restaurant."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the data view updates correctly and no data from previous tenant or restaurant persists."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Create and Submit Survey",
+    "description": "Verify the feedback system allows creating surveys, submitting responses, and calculating accurate NPS scores.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the survey builder page."
+      },
+      {
+        "type": "action",
+        "description": "Create a new survey with multiple question types."
+      },
+      {
+        "type": "action",
+        "description": "Publish the survey."
+      },
+      {
+        "type": "action",
+        "description": "Access the feedback form as a customer would."
+      },
+      {
+        "type": "action",
+        "description": "Complete and submit the survey."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that the survey response is recorded."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to NPS engine page."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm NPS score and trend charts include the newly submitted response and calculations are correct."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Analytics Dashboard Data Accuracy and Export",
+    "description": "Ensure analytics dashboards display correct data with responsive charts, AI insights are relevant, and reports export properly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to General Analytics page."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify charts render correctly and data matches backend statistics."
+      },
+      {
+        "type": "action",
+        "description": "Open AI Insights page."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm AI insights are displayed and relevant to available data."
+      },
+      {
+        "type": "action",
+        "description": "Generate and export a detailed report."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the exported file is generated successfully, data within is correctly formatted and matches dashboard data."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Campaign Creation and Communication Dispatch",
+    "description": "Verify users can create, edit, delete campaigns, and send communications without errors.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to Campaigns page."
+      },
+      {
+        "type": "action",
+        "description": "Create a new campaign with valid details."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure the campaign appears in the campaign dashboard."
+      },
+      {
+        "type": "action",
+        "description": "Edit the campaign."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updates are saved and reflected correctly."
+      },
+      {
+        "type": "action",
+        "description": "Delete the campaign."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm campaign is removed from dashboard."
+      },
+      {
+        "type": "action",
+        "description": "Send out communication for an existing campaign."
+      },
+      {
+        "type": "assertion",
+        "description": "Validate communication is dispatched without errors and notifications are shown."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Gamification Events and Rewards Tracking",
+    "description": "Verify gamification features track events and rewards accurately with real-time updates.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to Gamification dashboard."
+      },
+      {
+        "type": "action",
+        "description": "Create and configure a new event."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm event appears in the event list."
+      },
+      {
+        "type": "action",
+        "description": "Trigger event participation or reward earning."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify rewards update immediately and user engagement metrics reflect the event."
+      },
+      {
+        "type": "action",
+        "description": "View engagement tracking page."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure statistics match performed actions."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "QR Code Generation and Scanning",
+    "description": "Verify that QR codes can be generated for restaurants and scan to access the correct feedback forms.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the QR Code management page."
+      },
+      {
+        "type": "action",
+        "description": "Generate QR code for a selected restaurant location."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify QR code image is displayed and corresponds to the correct restaurant."
+      },
+      {
+        "type": "action",
+        "description": "Scan QR code using a mobile device."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm scanning redirects to correct feedback collection form."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Subscription and Billing with Stripe Integration",
+    "description": "Verify subscription management with correct pricing plans, payment processing, and billing status updates.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to Billing page."
+      },
+      {
+        "type": "action",
+        "description": "Review available pricing plans."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure pricing plans are displayed correctly."
+      },
+      {
+        "type": "action",
+        "description": "Select a subscription plan and proceed to payment."
+      },
+      {
+        "type": "action",
+        "description": "Complete payment using Stripe test card."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payment success and subscription status updates accordingly."
+      },
+      {
+        "type": "action",
+        "description": "Cancel subscription."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm subscription cancelled state is reflected."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Accessibility Settings Application and Verification",
+    "description": "Ensure accessibility features can be configured and settings apply throughout the application.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to Accessibility settings page."
+      },
+      {
+        "type": "action",
+        "description": "Enable various accessibility options (e.g. high contrast, screen reader support)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify UI updates to reflect accessibility settings."
+      },
+      {
+        "type": "action",
+        "description": "Navigate through multiple pages."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm accessibility settings persist across views."
+      },
+      {
+        "type": "action",
+        "description": "Run automated accessibility audit."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure no critical accessibility issues are present."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Performance Benchmark: PWA Installation and Offline Support",
+    "description": "Verify the app can be installed as a PWA and functions correctly offline with cached data.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load application on supported browser."
+      },
+      {
+        "type": "action",
+        "description": "Trigger PWA installation prompt and install the app."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm app installs and launches successfully as PWA."
+      },
+      {
+        "type": "action",
+        "description": "Load various pages and cache data using the app."
+      },
+      {
+        "type": "action",
+        "description": "Disconnect network to simulate offline mode."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to navigate cached pages and perform supported interactions."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify pages load correctly with cached content and offline features work as intended."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Notification Toast Messages Display and Dismissal",
+    "description": "Verify notifications are shown as toast messages for various events and can be dismissed without blocking app interactions.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Trigger an action that generates a success notification."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm toast with success message appears."
+      },
+      {
+        "type": "action",
+        "description": "Trigger an error to generate an error notification."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify error toast message is shown."
+      },
+      {
+        "type": "action",
+        "description": "Dismiss the notifications manually."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure notifications disappear and UI interactions continue smoothly."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Routing System Role-Based Access Control",
+    "description": "Verify protected routes enforce role-based access control and unauthorized users are redirected properly.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as a regular user."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access an admin-only route."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that user is redirected or shown access denied message."
+      },
+      {
+        "type": "action",
+        "description": "Log in as an admin user."
+      },
+      {
+        "type": "action",
+        "description": "Access the same protected route."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm access is allowed and page content loads."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to a non-existent route."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure application shows a 404 or error page gracefully."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Custom Hook useFeedback Integration and Error Handling",
+    "description": "Unit test the custom hook useFeedback for expected behavior, including edge cases and error handling.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Write unit tests using Vitest for useFeedback hook to verify data fetching, caching, and update mechanisms."
+      },
+      {
+        "type": "action",
+        "description": "Simulate network errors and invalid data responses."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm hook handles errors gracefully and exposes appropriate error states."
+      },
+      {
+        "type": "action",
+        "description": "Test integration of useFeedback hook within components."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure component renders correctly with hook data and updates properly."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Third-Party Integration Failure and Fallback",
+    "description": "Verify the application handles third-party service failures gracefully with fallback mechanisms.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate failure or unavailability of an integrated service (e.g., Stripe, Supabase, analytics)."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm appropriate error messages or fallback UI is shown to the user."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to retry integration action."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that retry succeeds if service is restored."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure the rest of the application remains functional without crashing."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "UI Responsiveness and Mobile Optimization",
+    "description": "Verify the app UI components respond appropriately to different screen sizes and input types, optimized for mobile and touch.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the app on desktop browser and verify layout and component spacing."
+      },
+      {
+        "type": "action",
+        "description": "Resize browser window to various smaller widths."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm UI components adapt fluidly without layout breaks."
+      },
+      {
+        "type": "action",
+        "description": "Open the app on multiple mobile devices and simulators."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify components respond to touch gestures, swipe interactions, and pull-to-refresh as per design."
+      },
+      {
+        "type": "action",
+        "description": "Test mobile PWA installation experience."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm smooth installation and app launch."
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Offline Synchronization and Conflict Handling",
+    "description": "Verify offline support and synchronization mechanisms correctly sync offline updates when network resumes, handling conflicts appropriately.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Perform user actions that update data while online (e.g., submit feedback)."
+      },
+      {
+        "type": "action",
+        "description": "Switch the app to offline mode."
+      },
+      {
+        "type": "action",
+        "description": "Perform additional updates (e.g., create survey or edit profile) while offline."
+      },
+      {
+        "type": "action",
+        "description": "Restore network connectivity."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify offline updates are synchronized with backend without data loss."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm conflict resolution occurs gracefully or user is notified for manual resolution."
+      }
+    ]
+  }
+]

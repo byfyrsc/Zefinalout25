@@ -22,11 +22,11 @@ const TenantSelector = () => {
   const getPlanColor = (plan: string) => {
     switch (plan) {
       case 'enterprise':
-        return 'bg-gradient-to-r from-accent/20 to-accent/10 border-accent/30';
+        return 'border-accent';
       case 'professional':
-        return 'bg-gradient-to-r from-primary/20 to-primary/10 border-primary/30';
+        return 'border-primary';
       default:
-        return 'bg-gradient-to-r from-secondary/20 to-secondary/10 border-secondary/30';
+        return 'border-secondary';
     }
   };
 
@@ -34,7 +34,7 @@ const TenantSelector = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background flex items-center justify-center p-6">
       <div className="w-full max-w-4xl">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary-glow to-secondary bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl font-bold text-primary mb-4">
             Plataforma SaaS - InteliFeed
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -46,7 +46,7 @@ const TenantSelector = () => {
           {tenants.map((tenant) => (
             <Card 
               key={tenant.id} 
-              className={`cursor-pointer transition-all duration-300 hover:shadow-strong hover:scale-105 ${getPlanColor(tenant.plan)}`}
+              className={`cursor-pointer transition-all duration-300 bg-card border-2 border-transparent hover:border-primary ${getPlanColor(tenant.plan)}`}
               onClick={() => setCurrentTenant(tenant)}
             >
               <CardHeader className="pb-3">

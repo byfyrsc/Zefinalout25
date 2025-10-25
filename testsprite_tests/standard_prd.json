@@ -1,0 +1,331 @@
+{
+  "meta": {
+    "project": "InteliFeed Hub",
+    "date": "2025-09-13",
+    "prepared_by": "Software Development Manager"
+  },
+  "product_overview": "InteliFeed Hub is a modern, scalable, multi-tenant feedback and analytics platform designed to empower restaurant businesses with advanced feedback collection, analytics, campaign management, and gamification capabilities. It integrates state-of-the-art technologies and a mobile-first design approach to deliver a seamless user experience across devices.",
+  "core_goals": [
+    "Provide a complete feedback management system including surveys, NPS engine, and trend analytics to help restaurants understand customer sentiment.",
+    "Enable multi-tenant and restaurant-specific management to support diverse business needs under a unified platform.",
+    "Deliver robust analytics dashboards with customizable charts, AI-powered insights, and reporting for data-driven decision making.",
+    "Offer comprehensive campaign creation and communication tools to engage customers effectively.",
+    "Incorporate gamification features to enhance user engagement through events and rewards.",
+    "Support seamless authentication, user profile management, and role-based access control.",
+    "Ensure high performance with PWA capabilities, offline support, and mobile-first UI components.",
+    "Implement a flexible billing system for subscription and pricing plan management.",
+    "Integrate third-party services and native device capabilities to extend platform functionality.",
+    "Maintain accessibility and internationalization to serve diverse user groups."
+  ],
+  "key_features": [
+    "Authentication System with login, signup, password recovery, and secure user profile management.",
+    "Multi-tenant architecture allowing tenant and restaurant selection with context management.",
+    "Feedback Management System including NPS engine, survey builder, feedback collection forms, and detailed insights tabs.",
+    "Advanced Analytics Dashboards offering general, restaurant-specific, AI-powered insights and exportable reports.",
+    "Campaign Management tools for building, managing, and communicating campaigns.",
+    "Gamification System featuring events management, rewards distribution, and user engagement tracking.",
+    "QR Code Generation and Management for streamlined feedback collection at restaurant locations.",
+    "Billing System handling pricing plans, subscriptions, and payment integrations with Stripe.",
+    "Accessibility features with configurable settings to support users with disabilities.",
+    "Mobile-first UI Component library optimized for responsive and touch-based interaction.",
+    "Performance enhancements via PWA, lazy loading, virtualization of large lists, and offline synchronization.",
+    "Comprehensive Notification System using toast messages for instant user feedback.",
+    "Routing system with protected and public routes ensuring secure and smooth navigation.",
+    "Custom React hooks to facilitate reusable logic and native device capability integration.",
+    "Third-party integration manager to connect and handle external services.",
+    "State management with React Query and Zustand for server and client states respectively."
+  ],
+  "user_flow_summary": [
+    "User signs up or logs in via the authentication system; password recovery is available if needed.",
+    "User selects tenant and restaurant context to work within the correct scope.",
+    "User accesses the feedback management interface to create surveys, view NPS scores, analyze trends, and review customer feedback.",
+    "User navigates to the analytics dashboard to view visual charts, AI insights, or generate/export detailed reports.",
+    "User creates and manages marketing or engagement campaigns and communicates via integrated tools.",
+    "User engages with gamification features like events and rewards to increase interaction and retention.",
+    "Restaurant managers generate and share QR codes to facilitate easy customer feedback collection.",
+    "User accesses billing page to view pricing plans, manage subscriptions, and handle payments securely.",
+    "User customizes accessibility settings to enhance usability for their needs.",
+    "User receives and manages notifications via toast messages throughout the application for real-time feedback.",
+    "All navigation is facilitated by a robust routing system with role-based and protected route guards.",
+    "Application ensures smooth performance on mobile and PWA environments with offline support and device capability integration."
+  ],
+  "validation_criteria": [
+    "All authentication flows including signup, login, password recovery, and profile updates must function securely with proper validation and error handling.",
+    "Multi-tenant and restaurant selection contexts must correctly switch views and data without leaks between tenants.",
+    "Feedback system must support creating, submitting, and analyzing surveys with accurate NPS calculations and trend visualizations.",
+    "Analytics dashboards should display accurate and responsive charts; AI insights must provide relevant suggestions; report exports generate correct data files.",
+    "Campaign management tools must allow creation, editing, deletion, and communication dispatch without errors.",
+    "Gamification features should track events and rewards accurately with real-time updates.",
+    "QR codes generated should be scannable and properly linked to feedback forms specific to the selected restaurant.",
+    "Billing system must process pricing plans and subscriptions securely with integration to Stripe and reflect correct billing status.",
+    "Accessibility settings must apply across the app and pass automated and manual accessibility audits.",
+    "UI must be fully responsive and optimized for mobile devices with smooth PWA installation and offline functionality.",
+    "Notification system must provide timely and contextually accurate messages without blocking critical interactions.",
+    "Routing system should protect restricted pages and handle navigation errors gracefully.",
+    "Custom hooks must be unit tested with Vitest and integration tested where applicable.",
+    "All third-party integrations must be monitored for failures and handle edge cases gracefully with fallbacks.",
+    "Performance benchmarks including load times, responsiveness, and caching strategies must meet defined SLAs."
+  ],
+  "code_summary": {
+    "tech_stack": [
+      "TypeScript",
+      "React 18",
+      "Vite",
+      "TailwindCSS",
+      "Shadcn/ui",
+      "Radix UI",
+      "Framer Motion",
+      "React Router",
+      "React Query",
+      "Zustand",
+      "Supabase",
+      "Capacitor.js",
+      "PWA",
+      "Recharts",
+      "React Hook Form",
+      "Zod",
+      "Sonner",
+      "Vitest",
+      "Testing Library"
+    ],
+    "features": [
+      {
+        "name": "Authentication System",
+        "description": "Complete authentication system with login, signup, password recovery, and user profile management",
+        "files": [
+          "src/pages/Login.tsx",
+          "src/pages/ForgotPassword.tsx",
+          "src/pages/ProfilePage.tsx",
+          "src/components/auth/LoginForm.tsx",
+          "src/components/auth/SignUpForm.tsx",
+          "src/components/auth/ProtectedRoute.tsx",
+          "src/components/auth/UserProfile.tsx",
+          "src/contexts/AuthContext.tsx"
+        ]
+      },
+      {
+        "name": "Multi-tenant Management",
+        "description": "Multi-tenant architecture with tenant and restaurant selection capabilities",
+        "files": [
+          "src/components/tenant/TenantSelector.tsx",
+          "src/components/tenant/RestaurantSelector.tsx",
+          "src/contexts/TenantContext.tsx"
+        ]
+      },
+      {
+        "name": "Feedback Management System",
+        "description": "Comprehensive feedback collection and management system with NPS engine and survey builder",
+        "files": [
+          "src/pages/RestaurantFeedbackPage.tsx",
+          "src/pages/NPSEnginePage.tsx",
+          "src/components/FeedbackForm.tsx",
+          "src/components/feedback/NPSEngine.tsx",
+          "src/components/feedback/SurveyBuilder.tsx",
+          "src/components/feedback/nps/NPSScoreCard.tsx",
+          "src/components/feedback/nps/NPSTrendChart.tsx",
+          "src/components/feedback/nps/NPSBreakdownCard.tsx",
+          "src/components/feedback/nps/NPSBenchmarkCard.tsx",
+          "src/components/feedback/nps/NPSInsightsTab.tsx",
+          "src/components/feedback/nps/NPSSegmentsTab.tsx",
+          "src/components/restaurant/FeedbackList.tsx"
+        ]
+      },
+      {
+        "name": "Analytics Dashboard",
+        "description": "Advanced analytics with charts, insights, and reporting capabilities",
+        "files": [
+          "src/pages/GeneralAnalyticsPage.tsx",
+          "src/pages/AdvancedAnalyticsPage.tsx",
+          "src/pages/AIInsightsPage.tsx",
+          "src/pages/RestaurantAnalyticsPage.tsx",
+          "src/pages/ReportsPage.tsx",
+          "src/components/AnalyticsCharts.tsx",
+          "src/components/advanced/AdvancedAnalytics.tsx",
+          "src/components/advanced/AIInsights.tsx",
+          "src/components/advanced/ReportExporter.tsx",
+          "src/components/restaurant/RestaurantAnalytics.tsx"
+        ]
+      },
+      {
+        "name": "Campaign Management",
+        "description": "Campaign creation, management, and communication tools",
+        "files": [
+          "src/pages/CampaignsPage.tsx",
+          "src/pages/CommunicationPage.tsx",
+          "src/components/campaigns/CampaignBuilder.tsx",
+          "src/components/campaigns/CampaignDashboard.tsx",
+          "src/components/advanced/AdvancedCommunication.tsx"
+        ]
+      },
+      {
+        "name": "Gamification System",
+        "description": "Gamification features with events, rewards, and engagement tools",
+        "files": [
+          "src/pages/GamificationPage.tsx",
+          "src/pages/EventsPage.tsx",
+          "src/components/gamification/GamificationDashboard.tsx",
+          "src/components/events/EventsHub.tsx"
+        ]
+      },
+      {
+        "name": "QR Code System",
+        "description": "QR code generation and management for feedback collection",
+        "files": [
+          "src/pages/RestaurantQRCodePage.tsx",
+          "src/components/restaurant/QRCodeGenerator.tsx"
+        ]
+      },
+      {
+        "name": "Billing System",
+        "description": "Billing management with pricing plans and subscription handling",
+        "files": [
+          "src/pages/Billing.tsx",
+          "src/components/billing/BillingDashboard.tsx",
+          "src/components/billing/PricingPlans.tsx",
+          "src/hooks/useBilling.ts"
+        ]
+      },
+      {
+        "name": "Accessibility Features",
+        "description": "Comprehensive accessibility support with settings and providers",
+        "files": [
+          "src/pages/AccessibilityPage.tsx",
+          "src/components/accessibility/AccessibilityProvider.tsx",
+          "src/components/accessibility/AccessibilitySettings.tsx"
+        ]
+      },
+      {
+        "name": "Performance Optimization",
+        "description": "Performance features including PWA, lazy loading, and virtual scrolling",
+        "files": [
+          "src/components/performance/PWAInstallPrompt.tsx",
+          "src/components/performance/LazyImage.tsx",
+          "src/components/performance/VirtualizedList.tsx"
+        ]
+      },
+      {
+        "name": "Mobile-First UI Components",
+        "description": "Extensive UI component library optimized for mobile devices",
+        "files": [
+          "src/components/ui/button.tsx",
+          "src/components/ui/card.tsx",
+          "src/components/ui/input.tsx",
+          "src/components/ui/form.tsx",
+          "src/components/ui/dialog.tsx",
+          "src/components/ui/sheet.tsx",
+          "src/components/ui/tabs.tsx",
+          "src/components/ui/table.tsx",
+          "src/components/ui/chart.tsx",
+          "src/components/ui/floating-action-button.tsx",
+          "src/components/ui/touch-button.tsx",
+          "src/components/ui/swipeable-card.tsx",
+          "src/components/ui/pull-to-refresh.tsx",
+          "src/components/ui/micro-interactions.tsx"
+        ]
+      },
+      {
+        "name": "Custom Hooks",
+        "description": "Custom React hooks for various functionalities",
+        "files": [
+          "src/hooks/useFeedback.ts",
+          "src/hooks/useBilling.ts",
+          "src/hooks/useLocalStorage.tsx",
+          "src/hooks/useNativeCapabilities.tsx",
+          "src/hooks/useOfflineSync.tsx",
+          "src/hooks/useResponsive.tsx",
+          "src/hooks/useSwipeGestures.tsx",
+          "src/hooks/useTouchFeedback.tsx",
+          "src/hooks/use-mobile.tsx",
+          "src/hooks/use-toast.ts"
+        ]
+      },
+      {
+        "name": "Layout and Navigation",
+        "description": "Layout components and navigation system",
+        "files": [
+          "src/pages/DashboardLayout.tsx",
+          "src/components/layout/Header.tsx",
+          "src/components/layout/Sidebar.tsx",
+          "src/components/layout/navigationConfig.ts"
+        ]
+      },
+      {
+        "name": "Integrations",
+        "description": "Third-party integrations management",
+        "files": [
+          "src/pages/IntegrationsPage.tsx",
+          "src/components/integrations/IntegrationsManager.tsx"
+        ]
+      },
+      {
+        "name": "Restaurant Management",
+        "description": "Restaurant-specific features and settings",
+        "files": [
+          "src/pages/RestaurantOverviewPage.tsx",
+          "src/pages/RestaurantSettingsPage.tsx",
+          "src/components/restaurant/RestaurantSettings.tsx"
+        ]
+      },
+      {
+        "name": "Notification System",
+        "description": "Notification center and toast system",
+        "files": [
+          "src/components/NotificationCenter.tsx",
+          "src/components/ui/toast.tsx",
+          "src/components/ui/toaster.tsx",
+          "src/components/ui/sonner.tsx"
+        ]
+      },
+      {
+        "name": "State Management",
+        "description": "State management with Zustand and React Query",
+        "files": [
+          "src/stores/uiStore.ts",
+          "src/contexts/AuthContext.tsx",
+          "src/contexts/TenantContext.tsx"
+        ]
+      },
+      {
+        "name": "Routing System",
+        "description": "Application routing with protected and public routes",
+        "files": [
+          "src/routes/index.tsx",
+          "src/routes/protectedRoutes.tsx",
+          "src/routes/publicRoutes.tsx",
+          "src/routes/components/RouteGuard.tsx",
+          "src/routes/components/RouteWrapper.tsx"
+        ]
+      },
+      {
+        "name": "Services and API",
+        "description": "API services and external integrations",
+        "files": [
+          "src/services/supabase.ts",
+          "src/services/stripe.ts",
+          "src/services/analytics.ts"
+        ]
+      },
+      {
+        "name": "Type Definitions",
+        "description": "TypeScript type definitions for the application",
+        "files": [
+          "src/types/auth.ts",
+          "src/types/feedback.ts",
+          "src/types/analytics.ts",
+          "src/types/billing.ts",
+          "src/types/common.ts"
+        ]
+      },
+      {
+        "name": "Testing Infrastructure",
+        "description": "Testing setup and utilities",
+        "files": [
+          "src/tests/setup.ts",
+          "src/contexts/AuthContext.test.tsx",
+          "src/contexts/AuthContext.helpers.test.ts",
+          "src/components/ui/button.test.tsx"
+        ]
+      }
+    ]
+  }
+}

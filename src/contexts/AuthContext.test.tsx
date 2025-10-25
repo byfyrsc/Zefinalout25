@@ -6,17 +6,28 @@ import { ReactNode } from 'react';
 // Mock server-only
 vi.mock("server-only", () => ({}));
 
+// Create mock functions
+const mockGetSession = vi.fn();
+const mockOnAuthStateChange = vi.fn();
+const mockSignInWithPassword = vi.fn();
+const mockSignUp = vi.fn();
+const mockSignOut = vi.fn();
+const mockResetPasswordForEmail = vi.fn();
+const mockUpdateUser = vi.fn();
+const mockUserServiceGetById = vi.fn();
+const mockTenantServiceGetById = vi.fn();
+
 // Mock supabase
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     auth: {
-      getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
-      onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
-      signInWithPassword: vi.fn(),
-      signUp: vi.fn(),
-      signOut: vi.fn(),
-      resetPasswordForEmail: vi.fn(),
-      updateUser: vi.fn()
+      getSession: mockGetSession,
+      onAuthStateChange: mockOnAuthStateChange,
+      signInWithPassword: mockSignInWithPassword,
+      signUp: mockSignUp,
+      signOut: mockSignOut,
+      resetPasswordForEmail: mockResetPasswordForEmail,
+      updateUser: mockUpdateUser
     }
   }
 }));
@@ -24,11 +35,10 @@ vi.mock('@/lib/supabase', () => ({
 // Mock supabase-services
 vi.mock('@/lib/supabase-services', () => ({
   userService: {
-    getById: vi.fn(),
-    update: vi.fn()
+    getById: mockUserServiceGetById
   },
   tenantService: {
-    getById: vi.fn()
+    getById: mockTenantServiceGetById
   }
 }));
 
@@ -37,6 +47,27 @@ vi.mock('sonner', () => ({
   toast: {
     error: vi.fn(),
     success: vi.fn()
+  }
+}));
+
+// Mock SessionService
+vi.mock('@/services/sessionService', () => ({
+  SessionService: {
+    initSessionManagement: vi.fn(),
+    cleanup: vi.fn(),
+    resetSessionTimer: vi.fn()
+  }
+}));
+
+// Mock SecurityService
+vi.mock('@/services/securityService', () => ({
+  SecurityService: {
+    isAuthRateLimited: vi.fn().mockReturnValue(false),
+    recordAuthAttempt: vi.fn(),
+    validateEmail: vi.fn().mockReturnValue(true),
+    validatePassword: vi.fn().mockReturnValue({ valid: true, errors: [] }),
+    sanitizeInput: vi.fn().mockImplementation((input) => input),
+    logSecurityEvent: vi.fn()
   }
 }));
 
@@ -62,9 +93,12 @@ const renderWithAuthProvider = (component: ReactNode) => {
 describe('AuthContext', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockOnAuthStateChange.mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } });
   });
   
   it('should show loading state initially', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } });
+    
     renderWithAuthProvider(<TestComponent />);
     
     // Verificar se o estado de carregamento é exibido inicialmente
@@ -74,8 +108,7 @@ describe('AuthContext', () => {
   
   it('should handle authentication errors and not get stuck in loading state', async () => {
     // Configurar o mock para simular um erro durante a autenticação
-    const { supabase } = await import('@/lib/supabase');
-    supabase.auth.getSession.mockRejectedValue(new Error('Authentication error'));
+    mockGetSession.mockRejectedValue(new Error('Authentication error'));
     
     renderWithAuthProvider(<TestComponent />);
     
@@ -91,8 +124,7 @@ describe('AuthContext', () => {
   
   it('should transition from loading to not authenticated state', async () => {
     // Configurar o mock para retornar null para session
-    const { supabase } = await import('@/lib/supabase');
-    supabase.auth.getSession.mockResolvedValue({ data: { session: null } });
+    mockGetSession.mockResolvedValue({ data: { session: null } });
     
     renderWithAuthProvider(<TestComponent />);
     
@@ -108,9 +140,8 @@ describe('AuthContext', () => {
   
   it('should handle successful authentication', async () => {
     // Configurar o mock para retornar uma sessão válida
-    const { supabase } = await import('@/lib/supabase');
     const mockUser = { id: '123', email: 'test@example.com' };
-    supabase.auth.getSession.mockResolvedValue({ 
+    mockGetSession.mockResolvedValue({ 
       data: { 
         session: { 
           user: mockUser 
@@ -119,15 +150,14 @@ describe('AuthContext', () => {
     });
     
     // Configurar mocks para userService e tenantService
-    const { userService, tenantService } = await import('@/lib/supabase-services');
-    userService.getById.mockResolvedValue({ 
+    mockUserServiceGetById.mockResolvedValue({ 
       id: '123', 
       email: 'test@example.com',
       tenant_id: '456',
       role: 'admin'
     });
     
-    tenantService.getById.mockResolvedValue({
+    mockTenantServiceGetById.mockResolvedValue({
       id: '456',
       name: 'Test Tenant'
     });
@@ -140,7 +170,9 @@ describe('AuthContext', () => {
     // Depois deve mostrar o estado autenticado
     await waitFor(() => {
       expect(screen.getByTestId('loaded')).toBeInTheDocument();
-      expect(screen.getByText('Autenticado')).toBeInTheDocument();
     });
+    
+    // Should show authenticated text
+    expect(screen.getByText('Autenticado')).toBeInTheDocument();
   });
 });

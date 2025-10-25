@@ -7,7 +7,7 @@
 @layer base {
   :root {
     /* Core Background & Foreground */
-    --background: 0 0% 100%;
+    --background: 210 40% 98%; /* Light Gray */
     --foreground: 222.2 84% 4.9%;
 
     /* Card Components */
@@ -19,17 +19,17 @@
     --popover-foreground: 222.2 84% 4.9%;
 
     /* Primary - Vibrant Violet */
-    --primary: 258 90% 66%;
+    --primary: 258 90% 66%; /* Vibrant Purple */
     --primary-foreground: 0 0% 100%;
     --primary-glow: 258 90% 72%;
 
-    /* Secondary - Neutral Gray */
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --secondary-glow: 240 5% 90%;
+    /* Secondary - Cool Gray */
+    --secondary: 215 14% 47%; /* Cool Gray */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-glow: 215 14% 53%;
 
     /* Accent - Teal */
-    --accent: 173 80% 40%;
+    --accent: 173 80% 40%; /* Bright Teal */
     --accent-foreground: 0 0% 100%;
 
     /* Muted Tones */
@@ -37,7 +37,7 @@
     --muted-foreground: 215.4 16.3% 46.9%;
 
     /* Success - Fresh Green */
-    --success: 142 71% 45%;
+    --success: 145 63% 49%; /* Green */
     --success-foreground: 0 0% 100%;
 
     /* Warning - Attention Orange */
@@ -45,8 +45,8 @@
     --warning-foreground: 0 0% 100%;
 
     /* Destructive States */
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%; /* Red */
+    --destructive-foreground: 0 0% 100%;
 
     /* Borders & Inputs */
     --border: 214.3 31.8% 91.4%;
@@ -81,52 +81,47 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 47.4% 11.2%;
+    /* Core Background & Foreground */
+    --background: 215 49% 11%; /* Deep Dark Blue */
     --foreground: 210 40% 98%;
 
+    /* Card Components */
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
 
+    /* Popover Components */
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 258 90% 66%;
+    /* Primary - Vibrant Violet */
+    --primary: 258 90% 66%; /* Vibrant Purple */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary - Cool Gray */
+    --secondary: 215 14% 47%; /* Cool Gray */
+    --secondary-foreground: 0 0% 100%;
 
+    /* Muted Tones */
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 173 80% 40%;
+    /* Accent - Teal */
+    --accent: 173 80% 40%; /* Bright Teal */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive States */
+    --destructive: 0 84% 60%; /* Red */
+    --destructive-foreground: 0 0% 100%;
 
+    /* Borders & Inputs */
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 258 90% 66%;
+
+    /* Sidebar */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

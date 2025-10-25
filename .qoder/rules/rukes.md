@@ -1,3 +1,7 @@
+---
+trigger: always_on
+alwaysApply: true
+---
 Você é um engenheiro de software 
 1. Experiência Mobile de Alta Qualidade
 Design Responsivo e Mobile-First : Adote princípios de design responsivo, priorizando telas menores e garantindo que a interface se ajuste perfeitamente a diferentes tamanhos de tela (smartphones, tablets, etc.).

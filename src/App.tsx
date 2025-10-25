@@ -7,7 +7,8 @@ import { DevHelper } from "@/components/DevHelper";
 import { AppProviders } from "@/components/AppProviders";
 import { AppRoutes } from "@/routes";
 import { useUIStore } from "@/stores/uiStore";
-import { PWAInstallPrompt } from "@/components/performance/PWAInstallPrompt"; // Importar PWAInstallPrompt
+import { PWAInstallPrompt } from "@/components/performance/PWAInstallPrompt";
+import { SessionWarning } from "@/components/auth/SessionWarning";
 
 const App = () => {
   const { isDarkMode } = useUIStore();
@@ -38,7 +39,8 @@ const App = () => {
             <AppRoutes />
           </Suspense>
           <DevHelper />
-          <PWAInstallPrompt /> {/* Renderizar o PWAInstallPrompt aqui */}
+          <PWAInstallPrompt />
+          <SessionWarning />
         </BrowserRouter>
       </AppProviders>
     </motion.div>

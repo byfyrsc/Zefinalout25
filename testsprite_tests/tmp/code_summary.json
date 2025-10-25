@@ -1,0 +1,262 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "React 18",
+    "Vite",
+    "TailwindCSS",
+    "Shadcn/ui",
+    "Radix UI",
+    "Framer Motion",
+    "React Router",
+    "React Query",
+    "Zustand",
+    "Supabase",
+    "Capacitor.js",
+    "PWA",
+    "Recharts",
+    "React Hook Form",
+    "Zod",
+    "Sonner",
+    "Vitest",
+    "Testing Library"
+  ],
+  "features": [
+    {
+      "name": "Authentication System",
+      "description": "Complete authentication system with login, signup, password recovery, and user profile management",
+      "files": [
+        "src/pages/Login.tsx",
+        "src/pages/ForgotPassword.tsx",
+        "src/pages/ProfilePage.tsx",
+        "src/components/auth/LoginForm.tsx",
+        "src/components/auth/SignUpForm.tsx",
+        "src/components/auth/ProtectedRoute.tsx",
+        "src/components/auth/UserProfile.tsx",
+        "src/contexts/AuthContext.tsx"
+      ]
+    },
+    {
+      "name": "Multi-tenant Management",
+      "description": "Multi-tenant architecture with tenant and restaurant selection capabilities",
+      "files": [
+        "src/components/tenant/TenantSelector.tsx",
+        "src/components/tenant/RestaurantSelector.tsx",
+        "src/contexts/TenantContext.tsx"
+      ]
+    },
+    {
+      "name": "Feedback Management System",
+      "description": "Comprehensive feedback collection and management system with NPS engine and survey builder",
+      "files": [
+        "src/pages/RestaurantFeedbackPage.tsx",
+        "src/pages/NPSEnginePage.tsx",
+        "src/components/FeedbackForm.tsx",
+        "src/components/feedback/NPSEngine.tsx",
+        "src/components/feedback/SurveyBuilder.tsx",
+        "src/components/feedback/nps/NPSScoreCard.tsx",
+        "src/components/feedback/nps/NPSTrendChart.tsx",
+        "src/components/feedback/nps/NPSBreakdownCard.tsx",
+        "src/components/feedback/nps/NPSBenchmarkCard.tsx",
+        "src/components/feedback/nps/NPSInsightsTab.tsx",
+        "src/components/feedback/nps/NPSSegmentsTab.tsx",
+        "src/components/restaurant/FeedbackList.tsx"
+      ]
+    },
+    {
+      "name": "Analytics Dashboard",
+      "description": "Advanced analytics with charts, insights, and reporting capabilities",
+      "files": [
+        "src/pages/GeneralAnalyticsPage.tsx",
+        "src/pages/AdvancedAnalyticsPage.tsx",
+        "src/pages/AIInsightsPage.tsx",
+        "src/pages/RestaurantAnalyticsPage.tsx",
+        "src/pages/ReportsPage.tsx",
+        "src/components/AnalyticsCharts.tsx",
+        "src/components/advanced/AdvancedAnalytics.tsx",
+        "src/components/advanced/AIInsights.tsx",
+        "src/components/advanced/ReportExporter.tsx",
+        "src/components/restaurant/RestaurantAnalytics.tsx"
+      ]
+    },
+    {
+      "name": "Campaign Management",
+      "description": "Campaign creation, management, and communication tools",
+      "files": [
+        "src/pages/CampaignsPage.tsx",
+        "src/pages/CommunicationPage.tsx",
+        "src/components/campaigns/CampaignBuilder.tsx",
+        "src/components/campaigns/CampaignDashboard.tsx",
+        "src/components/advanced/AdvancedCommunication.tsx"
+      ]
+    },
+    {
+      "name": "Gamification System",
+      "description": "Gamification features with events, rewards, and engagement tools",
+      "files": [
+        "src/pages/GamificationPage.tsx",
+        "src/pages/EventsPage.tsx",
+        "src/components/gamification/GamificationDashboard.tsx",
+        "src/components/events/EventsHub.tsx"
+      ]
+    },
+    {
+      "name": "QR Code System",
+      "description": "QR code generation and management for feedback collection",
+      "files": [
+        "src/pages/RestaurantQRCodePage.tsx",
+        "src/components/restaurant/QRCodeGenerator.tsx"
+      ]
+    },
+    {
+      "name": "Billing System",
+      "description": "Billing management with pricing plans and subscription handling",
+      "files": [
+        "src/pages/Billing.tsx",
+        "src/components/billing/BillingDashboard.tsx",
+        "src/components/billing/PricingPlans.tsx",
+        "src/hooks/useBilling.ts"
+      ]
+    },
+    {
+      "name": "Accessibility Features",
+      "description": "Comprehensive accessibility support with settings and providers",
+      "files": [
+        "src/pages/AccessibilityPage.tsx",
+        "src/components/accessibility/AccessibilityProvider.tsx",
+        "src/components/accessibility/AccessibilitySettings.tsx"
+      ]
+    },
+    {
+      "name": "Performance Optimization",
+      "description": "Performance features including PWA, lazy loading, and virtual scrolling",
+      "files": [
+        "src/components/performance/PWAInstallPrompt.tsx",
+        "src/components/performance/LazyImage.tsx",
+        "src/components/performance/VirtualizedList.tsx"
+      ]
+    },
+    {
+      "name": "Mobile-First UI Components",
+      "description": "Extensive UI component library optimized for mobile devices",
+      "files": [
+        "src/components/ui/button.tsx",
+        "src/components/ui/card.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/form.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/components/ui/sheet.tsx",
+        "src/components/ui/tabs.tsx",
+        "src/components/ui/table.tsx",
+        "src/components/ui/chart.tsx",
+        "src/components/ui/floating-action-button.tsx",
+        "src/components/ui/touch-button.tsx",
+        "src/components/ui/swipeable-card.tsx",
+        "src/components/ui/pull-to-refresh.tsx",
+        "src/components/ui/micro-interactions.tsx"
+      ]
+    },
+    {
+      "name": "Custom Hooks",
+      "description": "Custom React hooks for various functionalities",
+      "files": [
+        "src/hooks/useFeedback.ts",
+        "src/hooks/useBilling.ts",
+        "src/hooks/useLocalStorage.tsx",
+        "src/hooks/useNativeCapabilities.tsx",
+        "src/hooks/useOfflineSync.tsx",
+        "src/hooks/useResponsive.tsx",
+        "src/hooks/useSwipeGestures.tsx",
+        "src/hooks/useTouchFeedback.tsx",
+        "src/hooks/use-mobile.tsx",
+        "src/hooks/use-toast.ts"
+      ]
+    },
+    {
+      "name": "Layout and Navigation",
+      "description": "Layout components and navigation system",
+      "files": [
+        "src/pages/DashboardLayout.tsx",
+        "src/components/layout/Header.tsx",
+        "src/components/layout/Sidebar.tsx",
+        "src/components/layout/navigationConfig.ts"
+      ]
+    },
+    {
+      "name": "Integrations",
+      "description": "Third-party integrations management",
+      "files": [
+        "src/pages/IntegrationsPage.tsx",
+        "src/components/integrations/IntegrationsManager.tsx"
+      ]
+    },
+    {
+      "name": "Restaurant Management",
+      "description": "Restaurant-specific features and settings",
+      "files": [
+        "src/pages/RestaurantOverviewPage.tsx",
+        "src/pages/RestaurantSettingsPage.tsx",
+        "src/components/restaurant/RestaurantSettings.tsx"
+      ]
+    },
+    {
+      "name": "Notification System",
+      "description": "Notification center and toast system",
+      "files": [
+        "src/components/NotificationCenter.tsx",
+        "src/components/ui/toast.tsx",
+        "src/components/ui/toaster.tsx",
+        "src/components/ui/sonner.tsx"
+      ]
+    },
+    {
+      "name": "State Management",
+      "description": "State management with Zustand and React Query",
+      "files": [
+        "src/stores/uiStore.ts",
+        "src/contexts/AuthContext.tsx",
+        "src/contexts/TenantContext.tsx"
+      ]
+    },
+    {
+      "name": "Routing System",
+      "description": "Application routing with protected and public routes",
+      "files": [
+        "src/routes/index.tsx",
+        "src/routes/protectedRoutes.tsx",
+        "src/routes/publicRoutes.tsx",
+        "src/routes/components/RouteGuard.tsx",
+        "src/routes/components/RouteWrapper.tsx"
+      ]
+    },
+    {
+      "name": "Services and API",
+      "description": "API services and external integrations",
+      "files": [
+        "src/services/supabase.ts",
+        "src/services/stripe.ts",
+        "src/services/analytics.ts"
+      ]
+    },
+    {
+      "name": "Type Definitions",
+      "description": "TypeScript type definitions for the application",
+      "files": [
+        "src/types/auth.ts",
+        "src/types/feedback.ts",
+        "src/types/analytics.ts",
+        "src/types/billing.ts",
+        "src/types/common.ts"
+      ]
+    },
+    {
+      "name": "Testing Infrastructure",
+      "description": "Testing setup and utilities",
+      "files": [
+        "src/tests/setup.ts",
+        "src/contexts/AuthContext.test.tsx",
+        "src/contexts/AuthContext.helpers.test.ts",
+        "src/components/ui/button.test.tsx"
+      ]
+    }
+  ]
+}

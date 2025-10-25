@@ -58,7 +58,7 @@ const LocationSelector = () => { // Renomeado para LocationSelector
           {locations.map((location) => ( // Alterado para locations
             <Card 
               key={location.id} 
-              className="cursor-pointer transition-all duration-300 hover:shadow-strong hover:scale-105 bg-gradient-to-br from-card to-muted/10"
+              className="cursor-pointer transition-all duration-300 bg-card border-2 border-transparent hover:border-primary"
               onClick={() => setCurrentLocation(location)} // Alterado para setCurrentLocation
             >
               <CardHeader className="pb-3">
@@ -104,7 +104,7 @@ const LocationSelector = () => { // Renomeado para LocationSelector
         </div>
 
         {/* Add New Location Card */}
-        <Card className="border-dashed border-2 border-muted-foreground/20 bg-gradient-to-br from-muted/20 to-transparent">
+        <Card className="border-dashed border-2 border-muted-foreground/20 bg-card">
           <CardContent className="p-8 text-center">
             <Plus className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Adicionar Nova Localização</h3>
@@ -119,13 +119,13 @@ const LocationSelector = () => { // Renomeado para LocationSelector
 
         {/* Stats Summary */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
+          <Card className="bg-card border-l-4 border-primary">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">{locations.length}</div>
               <div className="text-sm text-muted-foreground">Localizações Ativas</div>
             </CardContent>
           </Card>
-          <Card className="bg-gradient-to-r from-secondary/10 to-secondary/5 border-secondary/20">
+          <Card className="bg-card border-l-4 border-secondary">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-secondary">
                 {locations.filter(l => l.isActive).length}
@@ -133,7 +133,7 @@ const LocationSelector = () => { // Renomeado para LocationSelector
               <div className="text-sm text-muted-foreground">Em Operação</div>
             </CardContent>
           </Card>
-          <Card className="bg-gradient-to-r from-accent/10 to-accent/5 border-accent/20">
+          <Card className="bg-card border-l-4 border-accent">
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-accent">
                 {new Date(currentTenant.createdAt).getFullYear()}

@@ -1,0 +1,72 @@
+{
+  "mcpServers": {
+    "simple-mcp-server": {
+      "command": "python",
+      "args": [
+        "C:\\APPZE-0605\\simple_mcp_server.py"
+      ],
+      "disabled": true,
+      "autoApprove": [],
+      "alwaysAllow": []
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "sbp_60d0927c011230b1037d8f3f7fdc3ffc2394203b"
+      ],
+      "disabled": false,
+      "autoApprove": [],
+      "note": "Supabase MCP server for database and backend management"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "disabled": false,
+      "autoApprove": [],
+      "note": "Sequential thinking MCP server for step-by-step reasoning"
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {
+        "DEFAULT_MINIMUM_TOKENS": "6000"
+      },
+      "disabled": false,
+      "autoApprove": [],
+      "note": "Context7 MCP server for context management and token optimization"
+    },
+    "weather-server": {
+      "command": "node",
+      "args": [
+        "~/mcp-quickstart/weather-server-typescript/build/index.js"
+      ],
+      "disabled": true,
+      "autoApprove": [],
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "note": "Weather server TypeScript - provides weather information and forecasts via MCP protocol",
+      "alwaysAllow": []
+    },
+    "codegen-mcp-original": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/codegen-sh/codegen-sdk.git#egg=codegen-mcp-server&subdirectory=codegen-examples/examples/codegen-mcp-server",
+        "codegen-mcp-server"
+      ],
+      "disabled": true,
+      "autoApprove": [],
+      "note": "Original codegen MCP server - requires uv to be installed"
+    }
+  }
+}

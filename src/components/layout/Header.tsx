@@ -36,7 +36,7 @@ export function Header({ toggleSidebar }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 w-full border-b border-border bg-card">
       <div className="flex h-16 items-center px-4">
         <Button
           variant="ghost"
@@ -62,7 +62,7 @@ export function Header({ toggleSidebar }: HeaderProps) {
             <Input
               type="search"
               placeholder="Search..."
-              className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+              className="w-full appearance-none bg-muted pl-8 shadow-none md:w-2/3 lg:w-1/3 focus-visible:ring-1 focus-visible:ring-ring"
             />
           </div>
         </div>
