@@ -1,4 +1,3 @@
-import { BrowserRouter } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, Suspense } from "react";
 import { Loader2 } from "lucide-react";
@@ -28,20 +27,18 @@ const App = () => {
       transition={{ duration: 0.5 }}
     >
       <AppProviders>
-        <BrowserRouter>
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center min-h-screen">
-                <Loader2 className="h-8 w-8 animate-spin" />
-              </div>
-            }
-          >
-            <AppRoutes />
-          </Suspense>
-          <DevHelper />
-          <PWAInstallPrompt />
-          <SessionWarning />
-        </BrowserRouter>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          }
+        >
+          <AppRoutes />
+        </Suspense>
+        <DevHelper />
+        <PWAInstallPrompt />
+        <SessionWarning />
       </AppProviders>
     </motion.div>
   );

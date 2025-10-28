@@ -15,11 +15,11 @@
         "-y",
         "@supabase/mcp-server-supabase@latest",
         "--access-token",
-        "sbp_60d0927c011230b1037d8f3f7fdc3ffc2394203b"
+        "sbp_577b35ed429ed383eb63f459e23a1cf07603b805"
       ],
       "disabled": false,
       "autoApprove": [],
-      "note": "Supabase MCP server for database and backend management"
+      "note": "Supabase MCP server (CLI) for database and backend management"
     },
     "sequential-thinking": {
       "command": "npx",

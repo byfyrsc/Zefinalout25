@@ -99,6 +99,97 @@ export enum Priority {
 export interface Database {
   public: {
     Tables: {
+      subscriptions: {
+        Row: {
+          id: string
+          tenant_id: string
+          plan_id: PlanType
+          status: SubscriptionStatus
+          price_id: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          start_date: string | null
+          current_period_start: string | null
+          current_period_end: string | null
+          cancel_at_period_end: boolean
+          metadata: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          plan_id: PlanType
+          status?: SubscriptionStatus
+          price_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          start_date?: string | null
+          current_period_start?: string | null
+          current_period_end?: string | null
+          cancel_at_period_end?: boolean
+          metadata?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          plan_id?: PlanType
+          status?: SubscriptionStatus
+          price_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          start_date?: string | null
+          current_period_start?: string | null
+          current_period_end?: string | null
+          cancel_at_period_end?: boolean
+          metadata?: Json
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      survey_templates: {
+        Row: {
+          id: string
+          tenant_id: string | null
+          name: string
+          description: string | null
+          category: string | null
+          questions: Json
+          is_public: boolean
+          usage_count: number | null
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id?: string | null
+          name: string
+          description?: string | null
+          category?: string | null
+          questions: Json
+          is_public?: boolean
+          usage_count?: number | null
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string | null
+          name?: string
+          description?: string | null
+          category?: string | null
+          questions?: Json
+          is_public?: boolean
+          usage_count?: number | null
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
       tenants: {
         Row: {
           id: string
@@ -707,3 +798,12 @@ export type CustomerSegmentUpdate = Database['public']['Tables']['customer_segme
 export type InvitationUpdate = Database['public']['Tables']['invitations']['Update']
 export type AuditLogUpdate = Database['public']['Tables']['audit_logs']['Update']
 export type ApiKeyUpdate = Database['public']['Tables']['api_keys']['Update']
+
+// Added exports for new tables
+export type Subscription = Database['public']['Tables']['subscriptions']['Row']
+export type SubscriptionInsert = Database['public']['Tables']['subscriptions']['Insert']
+export type SubscriptionUpdate = Database['public']['Tables']['subscriptions']['Update']
+
+export type SurveyTemplate = Database['public']['Tables']['survey_templates']['Row']
+export type SurveyTemplateInsert = Database['public']['Tables']['survey_templates']['Insert']
+export type SurveyTemplateUpdate = Database['public']['Tables']['survey_templates']['Update']

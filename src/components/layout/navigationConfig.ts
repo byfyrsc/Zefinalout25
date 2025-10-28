@@ -15,6 +15,8 @@ import {
   Brain,
   Target,
   Plug, // Novo ícone para Integrações
+  Trophy,
+  ShoppingBag
 } from "lucide-react";
 
 export interface NavItem {
@@ -45,4 +47,11 @@ export const mainNavigationItems: NavItem[] = [
   { id: "location-settings", label: "Location Settings", icon: Settings, path: "/location-settings", requiresLocation: true }, // Alterado para Location Settings
   { id: "profile", label: "User Profile", icon: Users, path: "/profile" },
   { id: "accessibility", label: "Accessibility", icon: Eye, path: "/accessibility" },
+];
+
+// Customer navigation items
+export const customerNavigationItems: NavItem[] = [
+  { id: "customer-gamification", label: "Minha Gamificação", icon: Trophy, path: "/customer/gamification" },
+  { id: "customer-events", label: "Eventos Disponíveis", icon: Calendar, path: "/customer/events" },
+  { id: "customer-rewards", label: "Meus Pontos e Recompensas", icon: ShoppingBag, path: "/customer/rewards" },
 ];

@@ -29,6 +29,11 @@ const GeneralAnalyticsPage = lazy(() => import("@/pages/GeneralAnalyticsPage"));
 const NPSEnginePage = lazy(() => import("@/pages/NPSEnginePage"));
 const IntegrationsPage = lazy(() => import("@/pages/IntegrationsPage")); // Nova importação
 
+// Customer pages
+const CustomerGamificationPage = lazy(() => import("@/pages/CustomerGamificationPage"));
+const CustomerEventsPage = lazy(() => import("@/pages/CustomerEventsPage"));
+const CustomerRewardsPage = lazy(() => import("@/pages/CustomerRewardsPage"));
+
 export const protectedRoutes = [
   {
     path: "/",
@@ -66,6 +71,11 @@ export const protectedRoutes = [
       { path: "general-analytics", element: <GeneralAnalyticsPage /> },
       { path: "nps-engine", element: <NPSEnginePage /> },
       { path: "integrations", element: <IntegrationsPage /> }, // Nova rota
+
+      // Customer routes
+      { path: "customer/gamification", element: <CustomerGamificationPage /> },
+      { path: "customer/events", element: <CustomerEventsPage /> },
+      { path: "customer/rewards", element: <CustomerRewardsPage /> },
     ],
   },
   // Rotas de billing como rotas separadas e protegidas
